@@ -1,0 +1,36 @@
+[workspace]
+resolver = "2"
+members = [
+    # "contracts/communities",
+    "contracts/articles",
+    "contracts/pages",
+    "contracts/users",
+    "contracts/lib"
+    ]
+
+
+[workspace.package]
+name = "deconnect"
+version = "0.1.0"
+edition = "2021"
+authors = ["Rocky Essel"]
+license = "MIT"
+publish = false
+
+[workspace.dependencies]
+# Internal Crates
+deconnect-users-io= {path ='contracts/users/io'}
+deconnect-pages-io= {path ='contracts/pages/io'}
+deconnect-lib= {path = "contracts/lib"}
+deconnect-users={path = "contracts/users"}
+deconnect-articles={path = "contracts/articles"}
+deconnect-articles-io={path = "contracts/articles/io"}
+
+# External Crates
+gstd = "1.4.1"
+gmeta = "1.4.1"
+gtest  = "1.4.1"
+gear-wasm-builder = "1.4.1"
+parity-scale-codec = { version = "3.6.12", default-features = false, features = ["derive"] }
+scale-info-derive= { version = "2.4.0", default-features = false }
+# scale-info = "2.11.3"

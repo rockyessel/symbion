@@ -1,0 +1,15 @@
+[package]
+name = "deconnect-articles-io"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+gstd.workspace = true
+gmeta.workspace = true
+parity-scale-codec.workspace=true
+scale-info-derive.workspace=true
+deconnect-pages-io.workspace = true
+deconnect-users-io.workspace = true
