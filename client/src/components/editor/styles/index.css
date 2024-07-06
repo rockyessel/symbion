@@ -1,0 +1,167 @@
+#editor h1 {
+  font-size: 2em; /* Adjust the font size as needed */
+  font-weight: bold;
+  margin-bottom: 0.5em; /* Adjust margin as needed */
+  color: inherit; /* Adjust the text color */
+}
+
+#editor h2 {
+  font-size: 1.5em;
+  font-weight: bold;
+  margin-bottom: 0.5em;
+  color: inherit;
+}
+
+#editor h3 {
+  font-size: 1.17em;
+  font-weight: bold;
+  margin-bottom: 0.5em;
+  color: inherit;
+}
+
+#editor h4 {
+  font-size: 1em;
+  font-weight: bold;
+  margin-bottom: 0.5em;
+  color: inherit;
+}
+
+#editor h5 {
+  font-size: 0.83em;
+  font-weight: bold;
+  margin-bottom: 0.5em;
+  color: inherit;
+}
+
+#editor h6 {
+  font-size: 0.67em;
+  font-weight: bold;
+  margin-bottom: 0.5em;
+  color: inherit;
+}
+
+#editor del {
+  text-decoration: line-through;
+  color: inherit; /* Adjust the color of strikethrough text */
+}
+
+#editor b,
+#editor strong {
+  font-weight: bold;
+}
+
+#editor i,
+#editor em {
+  font-style: italic;
+}
+
+#editor u {
+  text-decoration: underline;
+}
+
+#editor del {
+  text-decoration: line-through;
+}
+
+#editor sub {
+  vertical-align: sub;
+}
+
+#editor pre {
+  width: 100%;
+  /* min-height: 10rem; */
+}
+
+#editor code {
+  font-family: 'Courier New', monospace; /* Adjust the font family as needed */
+  padding: 0.2em;
+  border-radius: 3px;
+  font-size: 0.9em; /* Adjust the font size for code */
+}
+
+#editor blockquote {
+  border-left: 2px solid #ccc; /* Adjust the border color and style */
+  padding: 0 1em; /* Adjust the padding */
+  color: inherit; /* Adjust the text color */
+  font-style: italic;
+}
+
+#editor ol {
+  list-style-type: decimal;
+  margin: 1em 0;
+  padding-left: 2em; /* Adjust padding to add space between numbers and text */
+}
+
+#editor ul {
+  list-style-type: disc;
+  margin: 1em 0;
+  padding-left: 2em; /* Adjust padding to add space between bullets and text */
+}
+
+#editor ol li,
+#editor ul li {
+  margin-bottom: 0.5em; /* Add space between list items */
+}
+
+.slate-typewriter-placeholder {
+  opacity: 1 !important;
+}
+
+.slate-typewriter-animate {
+  position: absolute;
+  white-space: nowrap;
+  overflow: hidden;
+  margin: 0;
+  animation: typewriter 4s steps(44) 1s 1 normal both;
+}
+
+.slate-typewriter-animate.focus {
+  animation: none;
+}
+
+.slate-typewriter-animate > span {
+  opacity: 0.33;
+}
+
+.slate-typewriter-placeholder > p::after {
+  content: '';
+  border-right: 1px solid black;
+  animation: blinkTextCursor 1000ms infinite normal;
+}
+
+.slate-typewriter-placeholder.focus > p::after {
+  content: none;
+}
+
+@keyframes blinkTextCursor {
+  from {
+    border-right-color: black;
+  }
+  to {
+    border-right-color: transparent;
+  }
+}
+
+@keyframes typewriter {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+/* Example custom classes */
+.custom-active {
+  background-color: #3490dc;
+  color: #ffffff;
+}
+
+.custom-inactive {
+  background-color: #e2e8f0;
+  color: #4a5568;
+}
+
+.custom-focused {
+  outline: 2px solid #4299e1;
+}

@@ -1,0 +1,22 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/did/v1",
+    "https://w3id.org/security/suites/jws-2020/v1"
+  ],
+  "id": "did:web:deconnect.vercel.app",
+  "verificationMethod": [
+    {
+      "id": "did:web:deconnect.vercel.app#owner",
+      "type": "JsonWebKey2020",
+      "controller": "did:web:deconnect.vercel.app",
+      "publicKeyJwk": {
+        "kty": "EC",
+        "crv": "secp256k1",
+        "x": "+Gq0om82Q9EnF6WYNWZX+oKZtXlU4FolfCHiCpip/7E=",
+        "y": "ZLCxoSmf1CqCzgbORATb7/vCBb5OKwym+4EdqG7a9fU="
+      }
+    }
+  ],
+  "authentication": ["did:web:deconnect.vercel.app#owner"],
+  "assertionMethod": ["did:web:deconnect.vercel.app#owner"]
+}
