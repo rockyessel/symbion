@@ -1,5 +1,5 @@
 [package]
-name = "deconnect-articles"
+name = "articles"
 version.workspace = true
 edition.workspace = true
 publish.workspace = true
@@ -9,16 +9,16 @@ publish.workspace = true
 [dependencies]
 gstd.workspace = true
 gmeta.workspace = true
-deconnect-articles-io.workspace=true
+articles-io.workspace=true
 
 
 
 [dev-dependencies]
-deconnect-articles-io.workspace=true
+articles-io.workspace=true
 
 
 
 
 [build-dependencies]
 gear-wasm-builder.workspace =true
-deconnect-articles-io.workspace=true
+articles-io.workspace=true

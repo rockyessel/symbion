@@ -1,6 +1,6 @@
 #![no_std]
 
-use deconnect_pages_io::*;
+use pages_io::*;
 use gstd::{errors::Result, msg};
 
 #[gstd::async_main]

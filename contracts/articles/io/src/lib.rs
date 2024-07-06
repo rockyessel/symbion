@@ -1,15 +1,15 @@
 #![no_std]
 
-use deconnect_pages_io::{CommonAddressId, PageStatus, PageVisibility};
-use deconnect_users_io::UserId;
+use pages_io::{CommonAddressId, PageStatus, PageVisibility};
+use users_io::UserId;
 use gmeta::{InOut, Metadata};
 use gstd::{debug, errors::Result, msg, prelude::*, Vec};
 
-pub struct DeConnectArticlesMetadata;
+pub struct ArticlesMetadata;
 
 pub static mut ARTICLES: Vec<Article> = Vec::new();
 
-impl Metadata for DeConnectArticlesMetadata {
+impl Metadata for ArticlesMetadata {
     type Init = ();
     type Handle = InOut<ArticleActions, Result<ArticleEvents, ArticleEventError>>;
     type State = InOut<ArticleStateActions, ArticleStateEvents>;

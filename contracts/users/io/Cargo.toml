@@ -1,5 +1,5 @@
 [package]
-name = "deconnect-users-io"
+name = "users-io"
 version.workspace = true
 edition.workspace = true
 publish.workspace = true

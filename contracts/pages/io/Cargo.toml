@@ -1,5 +1,5 @@
 [package]
-name = "deconnect-pages-io"
+name = "pages-io"
 version.workspace = true
 edition.workspace = true
 publish.workspace = true
@@ -11,4 +11,4 @@ gmeta.workspace = true
 parity-scale-codec.workspace = true
 scale-info-derive.workspace = true
 # scale-info.workspace = true
-deconnect-users-io.workspace = true
+users-io.workspace = true
