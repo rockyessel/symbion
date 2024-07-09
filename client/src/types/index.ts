@@ -155,7 +155,7 @@ export interface IDIDCredentials {
   id: `did:address:0x${string}`;
   name: string;
   email: string;
-  address: `0x${string}`;
+  address: AddressType;
   password: string;
   image?: string;
   bio?: string;
@@ -167,7 +167,7 @@ export interface IUserProps {
   name: string;
   email: string;
   image: string;
-  address: `0x${string}`;
+  address: AddressType;
   token: string;
 }
 
@@ -239,11 +239,11 @@ export type InputEventType = ChangeEvent<
 >;
 
 export interface IArticle {
-  id: `0x${string}`;
+  id: AddressType;
   title: string;
-  owner: `0x${string}`;
-  createdBy: `0x${string}`;
-  transferredBy?: `0x${string}`;
+  owner: AddressType;
+  createdBy: AddressType;
+  transferredBy?: AddressType;
   slug: string;
   tags: string[];
   cover: string;
@@ -269,4 +269,30 @@ export interface IArticle {
   visibility: VisibilityType;
   content: string;
   isChatEnabled: boolean;
+}
+
+export interface IBlog {
+  id: AddressType;
+  owner: AddressType;
+  createdBy: AddressType;
+  title: string;
+  subdomain: string;
+  description: string;
+  category: string;
+  keywords: string[];
+  created_at: string;
+  updated_at: string;
+  customDomain: string;
+  visibility: VisibilityType;
+  status: StatusType;
+  niche: string;
+  socials: string;
+  sponsors: string;
+  favicon: string;
+}
+
+
+export interface Option {
+  name: VisibilityType | StatusType;
+  info: string;
 }

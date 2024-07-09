@@ -2,9 +2,13 @@
 
 import { GearApi, ProgramMetadata } from '@gear-js/api';
 import { domainURL } from '../utils/helpers';
-import { PAGE_PROGRAM_ID, USER_PROGRAM_ID } from '../utils/constants';
+import {
+  BLOG_PROGRAM_ID,
+  PAGE_PROGRAM_ID,
+  USER_PROGRAM_ID,
+} from '../utils/constants';
 import { VARA_TESTNET } from '../configs/env';
-import { AddressType } from '@/types';
+import { AddressType, IBlog } from '@/types';
 
 export const gearApi = async () =>
   await GearApi.create({
@@ -27,14 +31,40 @@ export const readAllUsers = async () => {
 
 export const getAllPages = async () => {
   const api = await gearApi();
-  const meta = await getProgramMetadata(domainURL('/meta/deconnect_pages.meta.txt'));
-  const payload = await api.programState.read({ programId: PAGE_PROGRAM_ID, payload: 'GetAllPages' }, meta);
+  const meta = await getProgramMetadata(
+    domainURL('/meta/deconnect_pages.meta.txt')
+  );
+  const payload = await api.programState.read(
+    { programId: PAGE_PROGRAM_ID, payload: 'GetAllPages' },
+    meta
+  );
   const programTypes = meta.getAllTypes();
-  console.log('pageActions: ', JSON.parse(programTypes.DeconnectPagesIoPageAction as string));
-  console.log('pageStateActions: ', JSON.parse(programTypes.DeconnectPagesIoPageStateAction as string));
+  console.log(
+    'pageActions: ',
+    JSON.parse(programTypes.DeconnectPagesIoPageAction as string)
+  );
+  console.log(
+    'pageStateActions: ',
+    JSON.parse(programTypes.DeconnectPagesIoPageStateAction as string)
+  );
   console.log('payload: ', payload.toJSON());
   const json = payload.toJSON() as unknown as any;
   return json.getAllPages;
+};
+
+export const getAllOwnerBlogs = async (
+  owner: AddressType
+): Promise<IBlog[]> => {
+  const api = await gearApi();
+  const meta = await getProgramMetadata(domainURL('/meta/blogs.meta.txt'));
+  const payload = await api.programState.read(
+    { programId: BLOG_PROGRAM_ID, payload: { GetAllBlogsByOwner: owner } },
+    meta
+  );
+
+  const json = payload.toJSON() as unknown as any;
+  console.log('json: ', json);
+  return json.getAllBlogsByOwner;
 };
 
 export const getAllPageUsernames = async () => {
@@ -75,6 +105,20 @@ export const getPageById = async (pageId: AddressType) => {
 
   const json = (await payload.toHuman()) as unknown as any;
   return json;
+};
+
+export const getOwnerBlogById = async (blogId: AddressType): Promise<IBlog> => {
+  const api = await gearApi();
+  const meta = await getProgramMetadata(domainURL('/meta/blogs.meta.txt'));
+  const payload = await api.programState.read(
+    {
+      programId: BLOG_PROGRAM_ID,
+      payload: { GetBlogById: blogId },
+    },
+    meta
+  );
+  const json = (await payload.toHuman()) as unknown as any;
+  return json.GetBlogById;
 };
 
 export const getProgramMetadata = async (source: string) => {

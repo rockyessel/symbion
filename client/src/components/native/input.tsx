@@ -47,12 +47,14 @@ const NativeInput = ({ label, className, disabled, ...props }: Props) => {
     }
   };
 
+  const showPlaceholder = !disabled && !isFocused && !hasText;
+
   return (
     <div className='w-full relative bg-inherit' onClick={handleFocus}>
       <Input
         {...props}
         disabled={disabled}
-        placeholder={disabled ? '' : props.placeholder}
+        placeholder={showPlaceholder ? '' : props.placeholder}
         ref={inputRef}
         className={cn('w-full px-2', className)}
         onFocus={handleFocus}
@@ -63,8 +65,7 @@ const NativeInput = ({ label, className, disabled, ...props }: Props) => {
           'absolute cursor-text left-0 text-sm text-lime-500 bg-neutral-900 mx-1 transition-all',
           {
             '-top-3 text-lime-600 text-sm ': isFocused || hasText,
-            'top-2 text-lime-500 w-full pt-1 px-2 pr-10':
-              !isFocused && !hasText,
+            'top-2 text-lime-500 w-fit pt-1 px-2 pr-10': !isFocused && !hasText,
           }
         )}
         onClick={handleFocus}

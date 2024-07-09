@@ -6,7 +6,7 @@ import {
   TalismanPNG,
 } from '@/assets/static';
 import { proxy } from 'valtio';
-import { IArticle, IPage, ISocial } from '@/types';
+import { IArticle, IBlog, IPage, ISocial } from '@/types';
 import {
   CircleDollarSign,
   FileText,
@@ -188,8 +188,29 @@ export const social: ISocial = {
   showOnPost: false,
 };
 
+export const BlogInit: IBlog = {
+  id: '0x',
+  owner: '0x',
+  createdBy: '0x',
+  title: '',
+  subdomain: '',
+  description: '',
+  category: '',
+  keywords: '',
+  created_at: new Date().toISOString(),
+  updated_at: new Date().toISOString(),
+  customDomain: '',
+  visibility: 'Public',
+  status: 'Active',
+  niche: '',
+  socials: '',
+  sponsors: '',
+  favicon: '',
+};
+
 export const USER_PROGRAM_ID: `0x${string}` = `0xb894ae37a69382d4ecbb10b0fd7a36a9660a9886241b9d1c57716210e09fd3a2`;
 export const ARTICLE_PROGRAM_ID: `0x${string}` = `0xa1272eecbaee52d04454d051fc3f573d78a41b430d5bfeab8adb000de525d9a3`;
+export const BLOG_PROGRAM_ID: `0x${string}` = `0xd62ce4aa138fb1f7368d31a0b6c91af78dbf23b21e8bc80edd2411c20e290f3a`;
 export const PAGE_PROGRAM_ID: `0x${string}` = `0x1a762a9676a68e44b92918b539f87208880940c1801698597eb8a91287fe5ba2`;
 export const ACCOUNT_ID: `0x${string}` = `0x09dd9fca8bbc9651a71f0583a42d58c49197eb78c3ddd1e634df289d2a5d52b9`;
 
