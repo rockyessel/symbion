@@ -48,17 +48,17 @@ const NativeTextarea = ({ label, className, disabled, ...props }: Props) => {
     }
   };
 
+  const showPlaceholder = !disabled && !isFocused && !hasText;
   return (
     <div className='w-full relative bg-inherit' onClick={handleFocus}>
       <Textarea
         {...props}
         disabled={disabled}
-        placeholder={disabled ? '' : props.placeholder}
+        placeholder={showPlaceholder ? '' : props.placeholder}
         ref={textareaRef}
         className={cn('w-full px-2', className)}
         onFocus={handleFocus}
         onBlur={handleBlur}
-
       />
       <Label
         className={cn(

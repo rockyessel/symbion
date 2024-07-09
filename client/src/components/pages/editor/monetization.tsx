@@ -9,6 +9,7 @@ import {
   InputEventType,
   IPage,
   IUserProps,
+  Option,
   StatusType,
   VisibilityType,
 } from '@/types';
@@ -21,11 +22,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-
-interface Option {
-  name: VisibilityType | StatusType;
-  info: string;
-}
 
 interface Props {
   page: IPage;

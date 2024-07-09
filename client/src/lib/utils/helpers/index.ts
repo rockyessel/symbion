@@ -3,7 +3,7 @@ import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { assignedMimeTypes, mimeTypes, supportedWallets } from '../constants';
-import { IDIDCredentials, Wallet } from '@/types';
+import { IDIDCredentials, Option, Wallet } from '@/types';
 import CryptoJS from 'crypto-js';
 import { ES256KSigner, hexToBytes } from 'did-jwt';
 import axios from 'axios';
@@ -133,6 +133,44 @@ export const domainURL = (path?: string) => {
     url = new URL(`${protocol}://${DOMAIN}${path}`);
   } else {
     url = new URL(`${protocol}://${DOMAIN}`);
+  }
+
+  return url.toString();
+};
+
+/**
+ * Builds a URL based on the provided subdomain and path.
+ * @param subdomain - The subdomain for the URL.
+ * @param path - The path for the URL.
+ * @returns The built URL string.
+ */
+export const subdomainURL = (subdomain?: string, path?: string) => {
+  const protocol = isProduction ? 'https' : 'http';
+  const rootDomain = DOMAIN;
+
+  // Ensure rootDomain is not an empty string
+  if (!DOMAIN) {
+    throw new Error('DOMAIN is not set or is an empty string');
+  }
+
+  let url: URL;
+
+  if (subdomain) {
+    // Validate subdomain to avoid invalid URL
+    if (!/^[a-zA-Z0-9-]+$/.test(subdomain)) {
+      throw new Error('Invalid subdomain');
+    }
+    url = new URL(`${protocol}://${subdomain}.${DOMAIN}`);
+  } else {
+    url = new URL(`${protocol}://${DOMAIN}`);
+  }
+
+  if (path) {
+    // Validate path to avoid invalid URL
+    if (!/^\//.test(path)) {
+      throw new Error('Invalid path');
+    }
+    url.pathname = path;
   }
 
   return url.toString();
@@ -391,11 +429,20 @@ export const extractTextFromNodes = (nodes: Descendant[]) => {
   return result;
 };
 
-export const returnDescendant = (value: string | Descendant[]): Descendant[] => {
+export const returnDescendant = (
+  value: string | Descendant[]
+): Descendant[] => {
   if (typeof value === 'string') {
     const parsedDescendant: Descendant[] = JSON.parse(value);
     return parsedDescendant;
   }
-  
+
   return value;
+};
+
+export const getInitialOption = (
+  options: Option[],
+  optionName: string
+): Option => {
+  return options.find((option) => option.name === optionName) || options[0];
 };
