@@ -1,0 +1,13 @@
+diff --git a/node_modules/@apollo/server/dist/esm/ApolloServer.js b/node_modules/@apollo/server/dist/esm/ApolloServer.js
+index b716f63..b5baa67 100644
+--- a/node_modules/@apollo/server/dist/esm/ApolloServer.js
++++ b/node_modules/@apollo/server/dist/esm/ApolloServer.js
+@@ -1,7 +1,7 @@
+ import { isNodeLike } from '@apollo/utils.isnodelike';
+ import { InMemoryLRUCache, PrefixingKeyValueCache, } from '@apollo/utils.keyvaluecache';
+ import { makeExecutableSchema } from '@graphql-tools/schema';
+-import resolvable from '@josephg/resolvable';
++import resolvable from '@josephg/resolvable/index.js';
+ import { GraphQLError, assertValidSchema, print, printSchema, } from 'graphql';
+ import loglevel from 'loglevel';
+ import Negotiator from 'negotiator';
