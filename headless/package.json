@@ -9,7 +9,6 @@
     "start": "node build/server.js",
     "lint": "eslint . --ext .ts",
     "dev": "npx nodemon",
-    "vercel-build": "echo Done running vercel-build.",
     "start:dev": "rimraf ./build && tsc && npm start",
     "postinstall": "patch-package"
   },
@@ -22,6 +21,7 @@
     "@gear-js/api": "^0.38.1",
     "@graphql-tools/merge": "^9.0.4",
     "@graphql-tools/utils": "^10.3.1",
+    "@vercel/node": "^3.2.2",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
