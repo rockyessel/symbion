@@ -1,8 +1,8 @@
 import { mergeResolvers } from '@graphql-tools/merge';
 
-import { Users } from './users';
-import { Articles } from './articles';
-import { Orgs } from './orgs';
-import { Blogs } from './blogs';
+import { Users } from './users.js';
+import { Articles } from './articles.js';
+import { Orgs } from './orgs.js';
+import { Blogs } from './blogs.js';
 
 export const resolvers = mergeResolvers([Users, Articles, Orgs, Blogs]);
