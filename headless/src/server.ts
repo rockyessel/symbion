@@ -32,6 +32,7 @@ const main = async () => {
     typeDefs,
     resolvers,
     plugins,
+    // @ts-ignore
     playground: true,
     introspection: true,
   });
@@ -59,4 +60,4 @@ const main = async () => {
   });
 };
 
-main();
+export default main;

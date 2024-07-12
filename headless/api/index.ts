@@ -1,3 +1,6 @@
-import httpServer from '../src/server.js';
+import main from '../src/server.js';
 
-export default httpServer;
+main().catch((error) => {
+  console.error('Error starting server:', error);
+  process.exit(1);
+});
