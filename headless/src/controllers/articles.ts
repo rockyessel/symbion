@@ -9,18 +9,6 @@ interface IResolveParams<T, A> {
   context: IContext;
 }
 
-// interface IQuery {
-//   programId: string;
-//   payload: any;
-// }
-
-// export const queryData = async (source: string, query: IQuery) => {
-//   const api = await gearApi();
-//   const meta = await getMeta(source);
-
-//   const payload = await api.programState.read(query, meta);
-// };
-
 export const getUserArticles = async (
   props: IResolveParams<any, ArticleArgs>
 ) => {

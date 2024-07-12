@@ -1,11 +1,11 @@
 {
   "$schema": "./tsconfig-schema.json",
   "compilerOptions": {
-    "target": "ESNext",
-    "lib": ["esnext"],
-    "module": "ESNext",
-    "outDir": "build",
-    "rootDir": "src",
+    "target": "ES2016",
+    "lib": ["ES2016"],
+    "module": "commonjs",
+    "outDir": "dest",
+    "rootDir": ".",
     "sourceMap": true,
     "typeRoots": ["./@types", "./node_modules/@types"],
     "resolveJsonModule": true,
@@ -15,7 +15,7 @@
     "noImplicitAny": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "experimentalDecorators": true,
@@ -29,6 +29,6 @@
     "declarationMap": true,
     "preserveSymlinks": true
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "api/**/*.ts"],
   "exclude": ["node_modules"]
 }
