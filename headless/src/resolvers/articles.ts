@@ -11,7 +11,9 @@ export const Articles = {
       context: IContext
     ): Promise<IArticle[]> => {
       console.log({ parent, args, context });
-      const token = context.req.headers['x-api-key'];
+      console.log('context: ', context);
+      // const token = context.req.headers['x-api-key'];
+      const token = context.req.headers;
       console.log('token: ', token);
 
       // Replace the logic with your own implementation
