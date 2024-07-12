@@ -28,7 +28,7 @@ await apolloServer.start();
 // Set up our Express middleware to handle CORS, body parsing,
 // and our expressMiddleware function.
 server.use(
-  '/',
+  '/graph',
   cors<cors.CorsRequest>(),
   express.json(),
   // expressMiddleware accepts the same arguments:
