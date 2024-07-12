@@ -1,8 +1,8 @@
 import express from 'express';
 import { ApolloServer } from '@apollo/server';
-import { resolvers } from './resolvers';
-import { typeDefs } from './typeDefs';
-import { IContext } from './types';
+import { resolvers } from './resolvers/index.js';
+import { typeDefs } from './typeDefs/index.js';
+import { IContext } from './types/index.js';
 import http from 'http';
 import cors from 'cors';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
