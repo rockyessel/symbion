@@ -44,4 +44,4 @@ await new Promise<void>((resolve) =>
 );
 console.log(`🚀 Server ready at http://localhost:5000/`);
 
-export default server;
+export default httpServer;
