@@ -29,6 +29,6 @@
     "declarationMap": true,
     "preserveSymlinks": true
   },
-  "include": ["src/**/*.ts", "public", "global.d.ts"],
+  "include": ["src/**/*.ts"],
   "exclude": ["node_modules"]
 }
