@@ -1,3 +1,3 @@
-import httpServer from '../src/server.js';
+import { httpServer } from '../src/server.js';
 
 export default httpServer;

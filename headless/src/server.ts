@@ -1,62 +1,89 @@
-import express from 'express';
-import { ApolloServer } from '@apollo/server';
-import { resolvers } from './resolvers/index.js';
-import { typeDefs } from './typeDefs/index.js';
-import { IContext } from './types/index.js';
+import {
+  ApolloServerPluginDrainHttpServer,
+  ApolloServerPluginLandingPageLocalDefault,
+} from 'apollo-server-core';
+import path from 'path';
 import http from 'http';
 import cors from 'cors';
-import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
-import { expressMiddleware } from '@apollo/server/express4';
 import morgan from 'morgan';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import { IContext } from './types/index.js';
+import { typeDefs } from './typeDefs/index.js';
+import { resolvers } from './resolvers/index.js';
+import { ApolloServer } from 'apollo-server-express';
+import express, { Application, Request, Response } from 'express';
 
-// Convert `import.meta.url` to `__dirname`
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const PORT = process.env.PORT || 9000;
 
-const PORT = process.env.PORT || 8000;
 
-const main = async () => {
-  // Required logic for integrating with Express
-  const server = express();
-  // Our httpServer handles incoming requests to our Express server.
-  // Below, we tell Apollo Server to "drain" this httpServer,
-  // enabling our servers to shut down gracefully.
-  const httpServer = http.createServer(server);
+const server: express.Application = express();
 
-  const plugins = [ApolloServerPluginDrainHttpServer({ httpServer })];
 
-  // Create a new ApolloServer instance
-  const apolloServer = new ApolloServer<IContext>({
-    typeDefs,
-    resolvers,
-    plugins,
-    playground: true,
-    introspection: true,
-  });
+const httpServer = http.createServer(server);
 
-  // Ensure we wait for our apolloServer to start
+const plugins = [
+  ApolloServerPluginDrainHttpServer({ httpServer }),
+  ApolloServerPluginLandingPageLocalDefault({
+    embed: true,
+    footer: false,
+  }),
+];
+
+// Create a new ApolloServer instance
+const apolloServer = new ApolloServer<IContext>({
+  typeDefs,
+  resolvers,
+  plugins,
+  introspection: true,
+  cache: 'bounded',
+  context: async ({ req, res }) => ({ req, res }),
+});
+
+// Apply CORS Middleware
+server.use(
+  cors({
+    origin: '*',
+    credentials: true,
+    methods: 'GET,POST,OPTIONS',
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  })
+);
+
+server.use(morgan('dev'));
+server.use(express.json());
+server.use(express.urlencoded({ extended: false }));
+server.use(express.static(path.join(__dirname, '../public')));
+
+const startApolloServer = async (app: Application) => {
   await apolloServer.start();
-
-  server.use(cors());
-  server.use(morgan('dev'));
-  server.use(express.json());
-  server.use(express.urlencoded({ extended: false }));
-  server.use(express.static(path.join(__dirname, '../public')));
-  server.use(
-    '/graphql',
-    expressMiddleware(apolloServer, {
-      context: async ({ req, res }) => ({ req, res }),
-    })
-  );
-
-  // Start the Express server
-  server.listen(PORT, () => {
-    console.log(' Directory: ', path.join(__dirname, '../public'));
-    console.log(` Server ready at http://localhost:${PORT}/graphql`);
-    console.log(` Playground available at http://localhost:${PORT}/graphql`);
-  });
+  console.log('---apolloServer started');
+  // @ts-ignore
+  apolloServer.applyMiddleware({ app });
 };
 
-main();
+startApolloServer(server);
+
+// Define the dynamic path route for GraphQL
+server.use(
+  '/:dynamicPath/graphql',
+  async (req: Request, _res: Response, next) => {
+    const { dynamicPath } = req.params;
+    console.log(`Dynamic path used: ${dynamicPath}`);
+
+    apolloServer.applyMiddleware({
+      // @ts-ignore
+      app: server,
+      path: `/${dynamicPath}/graphql`,
+    });
+    next();
+  }
+);
+
+const isVercelProduction = process.env.VERCEL === '1';
+
+if (!isVercelProduction) {
+  server.listen(PORT, () =>
+    console.log(`Server running on: http://localhost:${PORT}`)
+  );
+}
+
+export { httpServer };

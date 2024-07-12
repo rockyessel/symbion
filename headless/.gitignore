@@ -8,3 +8,6 @@ orbitdb
 orbitdb
 build
 others
+temp_dir
+dest
+tsconfig-schema.json
