@@ -1,6 +1,6 @@
-import { ARTICLE_META } from '../config/env';
-import { gearApi, getMeta } from '../config/gear';
-import { ArticleArgs, IContext } from '../types';
+import { ARTICLE_META } from '../config/env.js';
+import { gearApi, getMeta } from '../config/gear.js';
+import { ArticleArgs, IContext } from '../types/index.js';
 
 const ARTICLE_PROGRAM_ID: `0x${string}` = `0xa1272eecbaee52d04454d051fc3f573d78a41b430d5bfeab8adb000de525d9a3`;
 interface IResolveParams<T, A> {
