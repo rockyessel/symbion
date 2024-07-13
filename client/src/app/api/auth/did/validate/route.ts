@@ -2,12 +2,6 @@ import { cookieSetter } from '@/lib/_actions/helpers';
 import { decrypt } from '@/lib/utils/helpers';
 import { decodeJWT } from 'did-jwt';
 
-export const config = {
-  api: {
-    bodyParser: true,
-  },
-};
-
 /**
  * Creates a JSON response.
  * @param {boolean} success - Indicates the success status of the response.
