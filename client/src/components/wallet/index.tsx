@@ -10,7 +10,7 @@ import { useAccount } from '@gear-js/react-hooks';
 import { cookieSetter } from '@/lib/_actions/helpers';
 import { supportedWallets } from '@/lib/utils/constants';
 import { ScrollArea, ScrollBar } from '../ui/scroll-area';
-import { cn, summarizedAddress, truncate } from '@/lib/utils/helpers';
+import { cn, domainURL, summarizedAddress, truncate } from '@/lib/utils/helpers';
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { useWalletManagement } from '@/hooks/useWalletManagement';
 import { Account } from '@/types';
@@ -222,7 +222,7 @@ const Wallet = () => {
                                 'object-cover object-center',
                                 wallet.props.className
                               )}
-                              src={wallet.props.logo}
+                              src={domainURL(wallet.props.logo)}
                             />
                           </button>
                         )

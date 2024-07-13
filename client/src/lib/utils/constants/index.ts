@@ -1,10 +1,3 @@
-import {
-  EnkryptSVG,
-  NovaSVG,
-  PolkadotSVG,
-  SubwalletPNG,
-  TalismanPNG,
-} from '@/assets/static';
 import { proxy } from 'valtio';
 import { IArticle, IBlog, IPage, ISocial } from '@/types';
 import {
@@ -19,6 +12,7 @@ import {
 } from 'lucide-react';
 import { emptyParagraph } from '@/components/editor/lib/constants';
 
+
 export const providers = [
   { name: 'github', proxy: '1c4v90ving1t43du3924DMehKqsPt4tuXHx' },
   { name: 'google', proxy: 'h380wqjs90cxdsfi92h8rdxnOHEXEDj3iewd' },
@@ -31,7 +25,7 @@ export const supportedWallets = [
     props: {
       className: 'p-1',
       isSupported: true,
-      logo: TalismanPNG,
+      logo: '/wallets/talisman.png',
     },
   },
   {
@@ -40,7 +34,7 @@ export const supportedWallets = [
     props: {
       className: 'p-3',
       isSupported: true,
-      logo: EnkryptSVG,
+      logo: '/wallets/enkrypt.svg',
     },
   },
   {
@@ -49,7 +43,7 @@ export const supportedWallets = [
     props: {
       className: '',
       isSupported: true,
-      logo: SubwalletPNG,
+      logo: '/wallets/subwallet.png',
     },
   },
   {
@@ -58,7 +52,7 @@ export const supportedWallets = [
     props: {
       className: 'p-3',
       isSupported: true,
-      logo: PolkadotSVG,
+      logo: '/wallets/polkadot.svg',
     },
   },
   {
@@ -67,7 +61,7 @@ export const supportedWallets = [
     props: {
       className: 'p-2.5',
       isSupported: true,
-      logo: NovaSVG,
+      logo: '/wallets/nova.svg',
     },
   },
 ];
