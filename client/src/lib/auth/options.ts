@@ -13,7 +13,7 @@ import {
   signInModification,
 } from '../_actions/did';
 
-const page = domainURL('/did/verify');
+const page = domainURL('/auth/did/verify');
 
 export const authOptions: AuthOptions = {
   providers: [

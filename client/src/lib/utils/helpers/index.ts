@@ -8,7 +8,6 @@ import CryptoJS from 'crypto-js';
 import { ES256KSigner, hexToBytes } from 'did-jwt';
 import axios from 'axios';
 import { Descendant } from 'slate';
-import { ElementNodeType } from '@/components/editor/types';
 
 /**
  * Combines class names using `clsx` and merges Tailwind classes using `twMerge`.

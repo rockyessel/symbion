@@ -1,6 +1,7 @@
 import { ES256KSigner, hexToBytes } from 'did-jwt';
 import { cookieGetter } from '@/lib/_actions/helpers';
 import {
+  decrypt,
   encrypt,
   getCredentialSubject,
   getExpirationTime,
@@ -11,6 +12,7 @@ import {
   createVerifiablePresentationJwt,
   JwtPresentationPayload,
 } from 'did-jwt-vc';
+import { jsonResponse } from './validate/route';
 
 export const POST = async (request: Request) => {
   try {
@@ -18,6 +20,29 @@ export const POST = async (request: Request) => {
     console.log('credentials: ', credentials);
     const locale = await cookieGetter('locale');
     const { password, authType } = credentials;
+
+    let decodePassword: string | null;
+    try {
+      // Decrypt the password using the system secret
+      decodePassword = decrypt(password, String(process.env.SYSTEM_SECRET));
+      console.log('decodePassword: ', decodePassword);
+      if (!decodePassword) {
+        return jsonResponse(
+          false,
+          'Failed to decrypt the password. Something went wrong.',
+          null,
+          400
+        );
+      }
+    } catch (decryptError) {
+      console.error('Error decrypting token:', decryptError);
+      return jsonResponse(
+        false,
+        'Failed to decrypt the password. Invalid System Key.',
+        null,
+        400
+      );
+    }
 
     const credentialSubject = getCredentialSubject(credentials);
     const expirationTime = getExpirationTime(7); // 1 week in seconds
@@ -56,7 +81,7 @@ export const POST = async (request: Request) => {
     };
 
     const vpJwt = await createVerifiablePresentationJwt(vpPayload, issuer);
-    const encryptedToken = encrypt(vpJwt, password);
+    const encryptedToken = encrypt(vpJwt, decodePassword);
 
     return new Response(JSON.stringify({ payload: encryptedToken }), {
       status: 200,

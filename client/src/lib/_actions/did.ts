@@ -5,7 +5,6 @@ import { verifyCredential, verifyPresentation } from 'did-jwt-vc';
 import { Resolver } from 'did-resolver';
 import { getResolver } from 'web-did-resolver';
 import { IDIDCredentials, IUserProps } from '@/types';
-import { authOptions } from '../auth/options';
 import { getServerSession } from 'next-auth';
 import { cookieGetter, cookieRemover, cookieSetter } from './helpers';
 import { AdapterUser } from 'next-auth/adapters';
@@ -13,6 +12,7 @@ import { Account, Profile, Session, User } from 'next-auth';
 import { decrypt, domainURL, generatedValues } from '../utils/helpers';
 import axios from 'axios';
 import { JWT } from 'next-auth/jwt';
+import { authOptions } from '../auth/options';
 
 /**
  * Retrieves the user from the server session.
@@ -61,11 +61,13 @@ export const salt = async (value: string): Promise<string> => {
  * @param formData - Form data containing the file to be uploaded.
  * @returns A promise that resolves to the uploaded file data or error response data.
  */
-export const validateFileAndSigner = async (formData: FormData) => {
+export const validateFileAndSigner = async (data: any) => {
   try {
     // Construct the API path
     const path = domainURL('/api/auth/did/validate');
-    const response = await axios.post(path, formData);
+    const response = await axios.post(path, data);
+
+    console.log('response: ', response);
 
     // Return response data if the status code is 200
     if (response.status === 200) {
@@ -143,6 +145,8 @@ export const createDID = async (props: Partial<IDIDCredentials>) => {
   const path = domainURL(`/api/auth/did`);
   const response = await axios.post(path, { ...props });
   const encryptedPayload = response.data.payload;
+
+  console.log('encryptedPayload" ', encryptedPayload);
   return encryptedPayload;
 };
 
@@ -155,17 +159,18 @@ export const createNValidate = async (props: Partial<IDIDCredentials>) => {
   const { address, password } = props;
   const encryptedPayload = await createDID({ ...props });
 
-  // Create a file with the encrypted payload
-  const file = new File([encryptedPayload], `${generatedValues}.did`, {
-    type: 'application/octet-stream',
-  });
-  const formData = new FormData();
-  formData.append('file', file);
-  formData.append('password', password!);
-  formData.append('address', address!);
+ 
+
+  const data = {
+    password,
+    address,
+    e_token: encryptedPayload,
+  };
 
   // Validate the file and signer
-  const validatedResponse = await validateFileAndSigner(formData);
+  const validatedResponse = await validateFileAndSigner(data);
+  console.log('validatedResponse: ', validatedResponse);
+
   const { jwtVc, jwtVp, etx } = validatedResponse.payload;
   return { jwtVc, jwtVp, etx };
 };
