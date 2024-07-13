@@ -2,17 +2,17 @@
 
 // Energy Commission Certificate to setup a or get meter.
 
-use deconnect_users_io::UserAddressId;
+use users_io::UserAddressId;
 use gmeta::{InOut, Metadata};
 use gstd::{debug, errors::Result, msg, prelude::*, MessageId, Ok, Vec};
 
-pub struct DeConnectPagesMetadata;
+pub struct PagesMetadata;
 
 pub type CommonAddressId = MessageId;
 
 pub static mut PAGES: Vec<Page> = Vec::new();
 
-impl Metadata for DeConnectPagesMetadata {
+impl Metadata for PagesMetadata {
     type Init = ();
     type Handle = InOut<PageAction, Result<PageEvent, PageEventError>>;
     type State = InOut<PageStateAction, PageStateEvent>;

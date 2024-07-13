@@ -1,6 +1,6 @@
 #![no_std]
 
-use deconnect_articles_io::*;
+use articles_io::*;
 use gstd::{errors::Result, msg};
 
 #[gstd::async_main]

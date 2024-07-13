@@ -1,5 +1,5 @@
 [package]
-name = "deconnect-pages"
+name = "pages"
 version.workspace = true
 edition.workspace = true
 publish.workspace = true
@@ -9,17 +9,17 @@ publish.workspace = true
 [dependencies]
 gstd.workspace = true
 gmeta.workspace = true
-deconnect-pages-io.workspace = true
+pages-io.workspace = true
 # scale-info.workspace = true
 
 
 
 [dev-dependencies]
-deconnect-pages-io.workspace = true
+pages-io.workspace = true
 scale-info-derive.workspace = true
 
 
 
 [build-dependencies]
 gear-wasm-builder.workspace = true
-deconnect-pages-io.workspace = true
+pages-io.workspace = true

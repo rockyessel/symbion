@@ -66,6 +66,28 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "96d30a06541fbafbc7f82ed10c06164cfbd2c401138f6addd8404629c4b16711"
 
 [[package]]
+name = "articles"
+version = "0.1.0"
+dependencies = [
+ "articles-io",
+ "gear-wasm-builder",
+ "gmeta",
+ "gstd",
+]
+
+[[package]]
+name = "articles-io"
+version = "0.1.0"
+dependencies = [
+ "gmeta",
+ "gstd",
+ "pages-io",
+ "parity-scale-codec",
+ "scale-info-derive",
+ "users-io",
+]
+
+[[package]]
 name = "autocfg"
 version = "1.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -252,75 +274,6 @@ checksum = "1bfb12502f3fc46cca1bb51ac28df9d618d813cdc3d2f25b9fe775a34af26bb3"
 dependencies = [
  "generic-array",
  "typenum",
-]
-
-[[package]]
-name = "deconnect-articles"
-version = "0.1.0"
-dependencies = [
- "deconnect-articles-io",
- "gear-wasm-builder",
- "gmeta",
- "gstd",
-]
-
-[[package]]
-name = "deconnect-articles-io"
-version = "0.1.0"
-dependencies = [
- "deconnect-pages-io",
- "deconnect-users-io",
- "gmeta",
- "gstd",
- "parity-scale-codec",
- "scale-info-derive",
-]
-
-[[package]]
-name = "deconnect-lib"
-version = "0.1.0"
-
-[[package]]
-name = "deconnect-pages"
-version = "0.1.0"
-dependencies = [
- "deconnect-pages-io",
- "gear-wasm-builder",
- "gmeta",
- "gstd",
- "scale-info-derive",
-]
-
-[[package]]
-name = "deconnect-pages-io"
-version = "0.1.0"
-dependencies = [
- "deconnect-users-io",
- "gmeta",
- "gstd",
- "parity-scale-codec",
- "scale-info-derive",
-]
-
-[[package]]
-name = "deconnect-users"
-version = "0.1.0"
-dependencies = [
- "deconnect-users-io",
- "gear-wasm-builder",
- "gmeta",
- "gstd",
- "scale-info-derive",
-]
-
-[[package]]
-name = "deconnect-users-io"
-version = "0.1.0"
-dependencies = [
- "gmeta",
- "gstd",
- "parity-scale-codec",
- "scale-info-derive",
 ]
 
 [[package]]
@@ -806,6 +759,10 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e2abad23fbc42b3700f2f279844dc832adb2b2eb069b2df918f455c4e18cc646"
 
 [[package]]
+name = "lib"
+version = "0.1.0"
+
+[[package]]
 name = "libc"
 version = "0.2.155"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -889,6 +846,28 @@ checksum = "30d5b2194ed13191c1999ae0704b7839fb18384fa22e49b57eeaa97d79ce40da"
 dependencies = [
  "libc",
  "winapi",
+]
+
+[[package]]
+name = "pages"
+version = "0.1.0"
+dependencies = [
+ "gear-wasm-builder",
+ "gmeta",
+ "gstd",
+ "pages-io",
+ "scale-info-derive",
+]
+
+[[package]]
+name = "pages-io"
+version = "0.1.0"
+dependencies = [
+ "gmeta",
+ "gstd",
+ "parity-scale-codec",
+ "scale-info-derive",
+ "users-io",
 ]
 
 [[package]]
@@ -1268,6 +1247,27 @@ name = "unicode-xid"
 version = "0.2.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f962df74c8c05a667b5ee8bcf162993134c104e96440b663c8daa176dc772d8c"
+
+[[package]]
+name = "users"
+version = "0.1.0"
+dependencies = [
+ "gear-wasm-builder",
+ "gmeta",
+ "gstd",
+ "scale-info-derive",
+ "users-io",
+]
+
+[[package]]
+name = "users-io"
+version = "0.1.0"
+dependencies = [
+ "gmeta",
+ "gstd",
+ "parity-scale-codec",
+ "scale-info-derive",
+]
 
 [[package]]
 name = "version_check"

@@ -1,6 +1,6 @@
 #![no_std]
 
-use deconnect_users_io::*;
+use users_io::*;
 use gstd::msg;
 
 #[no_mangle]

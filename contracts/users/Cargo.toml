@@ -1,5 +1,5 @@
 [package]
-name = "deconnect-users"
+name = "users"
 version.workspace = true
 edition.workspace = true
 publish.workspace = true
@@ -7,12 +7,12 @@ publish.workspace = true
 [dependencies]
 gstd.workspace = true
 gmeta.workspace = true
-deconnect-users-io.workspace = true
+users-io.workspace = true
 
 [dev-dependencies]
-deconnect-users-io.workspace = true
+users-io.workspace = true
 scale-info-derive.workspace = true
 
 [build-dependencies]
 gear-wasm-builder.workspace = true
-deconnect-users-io.workspace = true
+users-io.workspace = true
