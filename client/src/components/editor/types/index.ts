@@ -3,7 +3,6 @@ import { ReactEditor } from 'slate-react';
 import { BaseEditor } from 'slate';
 import { KeyboardEvent } from 'react';
 import { Locale } from '@/i18n.config';
-import { codeThemes } from '../lib/constants';
 
 // Extend the Editor interface to include your custom handlers
 export type KeyEventEditor = {
