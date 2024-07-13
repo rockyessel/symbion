@@ -5,6 +5,7 @@ import { verifyCredential, verifyPresentation } from 'did-jwt-vc';
 import { Resolver } from 'did-resolver';
 import { getResolver } from 'web-did-resolver';
 import { IDIDCredentials, IUserProps } from '@/types';
+import { authOptions } from '../auth/options';
 import { getServerSession } from 'next-auth';
 import { cookieGetter, cookieRemover, cookieSetter } from './helpers';
 import { AdapterUser } from 'next-auth/adapters';
@@ -12,7 +13,6 @@ import { Account, Profile, Session, User } from 'next-auth';
 import { decrypt, domainURL, generatedValues } from '../utils/helpers';
 import axios from 'axios';
 import { JWT } from 'next-auth/jwt';
-import { authOptions } from '../auth/options';
 
 /**
  * Retrieves the user from the server session.
@@ -61,11 +61,15 @@ export const salt = async (value: string): Promise<string> => {
  * @param formData - Form data containing the file to be uploaded.
  * @returns A promise that resolves to the uploaded file data or error response data.
  */
-export const validateFileAndSigner = async (data: any) => {
+export const validateFileAndSigner = async (formData: FormData) => {
   try {
     // Construct the API path
     const path = domainURL('/api/auth/did/validate');
-    const response = await axios.post(path, data);
+    const response = await axios.post(path, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
 
     console.log('response: ', response);
 
@@ -159,16 +163,21 @@ export const createNValidate = async (props: Partial<IDIDCredentials>) => {
   const { address, password } = props;
   const encryptedPayload = await createDID({ ...props });
 
- 
+  console.log('encryptedPayload" ', encryptedPayload);
 
-  const data = {
-    password,
-    address,
-    e_token: encryptedPayload,
-  };
+  // Create a file with the encrypted payload
+  const file = new File([encryptedPayload], `${generatedValues()}.did`, {
+    type: 'application/octet-stream',
+  });
+  const formData = new FormData();
+  formData.set('file', file);
+  formData.set('password', password!);
+  formData.set('address', address!);
+
+  console.log('formData: ', formData);
 
   // Validate the file and signer
-  const validatedResponse = await validateFileAndSigner(data);
+  const validatedResponse = await validateFileAndSigner(formData);
   console.log('validatedResponse: ', validatedResponse);
 
   const { jwtVc, jwtVp, etx } = validatedResponse.payload;

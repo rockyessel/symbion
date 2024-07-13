@@ -21,6 +21,7 @@ const HtmlPreCodeElement = (props: RenderProps<CodeBlockType>) => {
   const { props: props_ } = element;
   const { code, language, theme, isShowLins } = props_;
 
+  const codeThemeKeys = Object.keys(codeThemes);
 
   return (
     <div
@@ -38,7 +39,7 @@ const HtmlPreCodeElement = (props: RenderProps<CodeBlockType>) => {
             <SelectContent>
               <SelectGroup>
                 <SelectLabel>Themes</SelectLabel>
-                {codeThemes.map((theme, index) => (
+                {codeThemeKeys.map((theme, index) => (
                   <SelectItem key={index} value={theme}>
                     {theme}
                   </SelectItem>

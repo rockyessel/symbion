@@ -3,14 +3,14 @@
 import Image from 'next/image';
 import { useState } from 'react';
 import { Check, Copy } from 'lucide-react';
-// import { usePopUp } from '@/hooks/usePopup';
+import { usePopUp } from '@/hooks/usePopup';
 import { decodeAddress } from '@gear-js/api';
 import { useAccount } from '@gear-js/react-hooks';
-// import WalletLoader from '../common/loaders/wallet';
+import WalletLoader from '../common/loaders/wallet';
 import { cookieSetter } from '@/lib/_actions/helpers';
 import { supportedWallets } from '@/lib/utils/constants';
 import { ScrollArea, ScrollBar } from '../ui/scroll-area';
-import { cn, domainURL, summarizedAddress, truncate } from '@/lib/utils/helpers';
+import { cn, summarizedAddress, truncate } from '@/lib/utils/helpers';
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { useWalletManagement } from '@/hooks/useWalletManagement';
 import { Account } from '@/types';
@@ -188,7 +188,7 @@ const Wallet = () => {
 
         <div className='text-white w-[428px] p-6 flex-col inline-flex'>
           {isLoading ? (
-            <div>Loading...</div>
+            <WalletLoader />
           ) : isWalletExtensionAvailable ? (
             <div className='flex flex-col'>
               <p className='text-gray-200 text-xl font-semibold'>
@@ -222,7 +222,7 @@ const Wallet = () => {
                                 'object-cover object-center',
                                 wallet.props.className
                               )}
-                              src={domainURL(wallet.props.logo)}
+                              src={wallet.props.logo}
                             />
                           </button>
                         )
