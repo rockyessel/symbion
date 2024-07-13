@@ -46,7 +46,7 @@ const ListSelector = ({
       onTagsChange(tags);
     }
     return;
-    // @ts-ignore
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tags]);
 
   const addTag = (tag: string) => {

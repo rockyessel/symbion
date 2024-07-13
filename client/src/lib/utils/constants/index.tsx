@@ -196,7 +196,7 @@ export const BlogInit: IBlog = {
   subdomain: '',
   description: '',
   category: '',
-  keywords: '',
+  keywords: [],
   created_at: new Date().toISOString(),
   updated_at: new Date().toISOString(),
   customDomain: '',
