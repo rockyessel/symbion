@@ -1,7 +1,7 @@
 import { Descendant } from 'slate';
 import { LinkNode, ParagraphNode } from '../../nodes';
 import {
-  a11yDark,
+  // a11yDark,
   atomDark,
   base16AteliersulphurpoolLight,
   cb,
@@ -50,7 +50,7 @@ import {
 
 
 export const codeThemes = {
-  a11yDark: a11yDark,
+  // a11yDark: a11yDark,
   atomDark: atomDark,
   base16AteliersulphurpoolLight: base16AteliersulphurpoolLight,
   cb: cb,
