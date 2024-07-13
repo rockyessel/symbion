@@ -305,6 +305,46 @@ export const downloadEncryptedToken = (encryptedToken: string) => {
 };
 
 /**
+ * Reads the content of a given file if it's of type 'application/octet-stream'.
+ * @param {File} file - The file to be read.
+ * @returns {Promise<string | null>} - A promise that resolves to the file content as a string, or null if an error occurs.
+ */
+export const fileReader = (file: File): Promise<string | null> => {
+  return new Promise((resolve, reject) => {
+    // Check if the file exists and its type is 'application/octet-stream'
+    if (file && file.type === 'application/octet-stream') {
+      const reader = new FileReader();
+
+      // Event handler for successful file reading
+      reader.onload = (event) => {
+        // Ensure event.target is not null and result is of type 'string'
+        if (event.target && typeof event.target.result === 'string') {
+          resolve(event.target.result);
+        } else {
+          console.error('File reading failed');
+          resolve(null);
+        }
+      };
+
+      // Event handler for file reading errors
+      reader.onerror = (event) => {
+        console.error('File reading error:', event);
+        resolve(null);
+      };
+
+      // Initiate reading the file as text
+      reader.readAsText(file);
+    } else {
+      // Alert the user if the file type is not valid
+      alert('Please upload a valid text file.');
+      resolve(null);
+    }
+  });
+};
+
+
+
+/**
  * Encrypts a given string with a password.
  * @param {string} value - The string to encrypt.
  * @param {string} key - The encryption key.

@@ -9,44 +9,69 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { useAccount, useAlert } from '@gear-js/react-hooks';
 import NativeInput from '@/components/native/input';
-import { cn, domainURL, summarizedAddress } from '@/lib/utils/helpers';
-// import { validateFileAndSigner } from '@/lib/_actions/did';
+import {
+  cn,
+  domainURL,
+  encrypt,
+  fileReader,
+  summarizedAddress,
+} from '@/lib/utils/helpers';
+import { validateFileAndSigner } from '@/lib/_actions/did';
 import { ChangeEvent, Fragment, ReactNode, useState } from 'react';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 
 const DIDVerify = () => {
   const { account } = useAccount();
-  const alter = useAlert();
+  const alert = useAlert();
   const [selectedFile, setSelectedFile] = useState<File | ''>('');
   const [password, setPassword] = useState('');
+  const [fileContent, setFileContent] = useState('');
 
-  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       const file = event.target.files[0];
+      const token = await fileReader(file);
+
+      if (!token) {
+        alert.error('No token found in file.');
+        setSelectedFile('');
+        return;
+      }
       setSelectedFile(file);
+      setFileContent(token);
     }
   };
 
   const handleDIDVerify = async () => {
-    const formData = new FormData();
-    formData.append('file', selectedFile);
-    formData.append('password', password);
-    formData.append('address', String(account?.decodedAddress));
+    if (!selectedFile && !fileContent) {
+      alert.error('Please make sure to upload a file.');
+      return;
+    }
+    const passwordEncrypted = encrypt(
+      password,
+      String(process.env.NEXT_PUBLIC_SYSTEM_SECRET)
+    );
 
-    // const response = await validateFileAndSigner(formData);
-    // const { payload, success, message } = response;
+    const data = {
+      e_token: fileContent,
+      password: passwordEncrypted,
+      address: String(account?.decodedAddress),
+    };
 
-    // if (success) {
-    //   alter.success(message);
-    //   await signIn('credentials', {
-    //     ...payload,
-    //     callbackUrl: domainURL('/dashboard'),
-    //     redirect: true,
-    //   });
-    // } else {
-    //   alter.error(message);
-    //   return;
-    // }
+    const response = await validateFileAndSigner(data);
+    const { payload, success, message } = response;
+
+    if (success) {
+      alert.success(message);
+      await signIn('credentials', {
+        ...payload,
+        callbackUrl: domainURL('/dashboard'),
+        redirect: true,
+      });
+    } else {
+      alert.error(message);
+      return;
+    }
   };
 
   return (
