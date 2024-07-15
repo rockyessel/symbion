@@ -12,6 +12,10 @@ import { AddressType, IBlog } from '@/types';
 import type { HexString } from '@polkadot/util/types';
 import { formatBalance } from '@polkadot/util';
 
+
+
+
+
 export const gearApi = async () =>
   await GearApi.create({
     providerAddress: VARA_TESTNET,

@@ -17,6 +17,8 @@ interface Props
     HTMLInputElement
   > {
   className?: string;
+  outerClassName?: string;
+  labelClassName?: string;
   label: string;
 }
 
@@ -50,7 +52,10 @@ const NativeInput = ({ label, className, disabled, ...props }: Props) => {
   const showPlaceholder = !disabled && !isFocused && !hasText;
 
   return (
-    <div className='w-full relative bg-inherit' onClick={handleFocus}>
+    <div
+      className={cn('w-full relative bg-inherit', props.outerClassName)}
+      onClick={handleFocus}
+    >
       <Input
         {...props}
         disabled={disabled}
@@ -62,10 +67,11 @@ const NativeInput = ({ label, className, disabled, ...props }: Props) => {
       />
       <Label
         className={cn(
-          'absolute cursor-text left-0 text-sm text-lime-500 bg-neutral-900 mx-1 transition-all',
+          'absolute cursor-text left-0 text-sm text-lime-500 bg-inherit mx-1 transition-all',
+          props.labelClassName,
           {
-            '-top-3 text-lime-600 text-sm ': isFocused || hasText,
-            'top-2 text-lime-500 w-fit pt-1 px-2 pr-10': !isFocused && !hasText,
+            '-top-3 text-lime-600 text-sm z-[20]': isFocused || hasText,
+            'top-2 text-lime-500 w-fit': !isFocused && !hasText,
           }
         )}
         onClick={handleFocus}
