@@ -4,8 +4,7 @@ import bcrypt from 'bcrypt';
 import { verifyCredential, verifyPresentation } from 'did-jwt-vc';
 import { Resolver } from 'did-resolver';
 import { getResolver } from 'web-did-resolver';
-import { IDIDCredentials, IUserProps } from '@/types';
-import { authOptions } from '../auth/options';
+import { AddressType, IDIDCredentials, IUserProps } from '@/types';
 import { getServerSession } from 'next-auth';
 import { cookieGetter, cookieRemover, cookieSetter } from './helpers';
 import { AdapterUser } from 'next-auth/adapters';
@@ -13,6 +12,8 @@ import { Account, Profile, Session, User } from 'next-auth';
 import { decrypt, domainURL, generatedValues } from '../utils/helpers';
 import axios from 'axios';
 import { JWT } from 'next-auth/jwt';
+import { authOptions } from '../auth/options';
+import { getBalance } from './gear';
 
 /**
  * Retrieves the user from the server session.
@@ -61,17 +62,13 @@ export const salt = async (value: string): Promise<string> => {
  * @param formData - Form data containing the file to be uploaded.
  * @returns A promise that resolves to the uploaded file data or error response data.
  */
-export const validateFileAndSigner = async (formData: FormData) => {
+export const validateFileAndSigner = async (data: any) => {
   try {
     // Construct the API path
     const path = domainURL('/api/auth/did/validate');
-    const response = await axios.post(path, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+    const response = await axios.post(path, data);
 
-    console.log('response: ', response);
+    // console.log('response: ', response);
 
     // Return response data if the status code is 200
     if (response.status === 200) {
@@ -131,7 +128,7 @@ export const verifyVcNVp = async (
   // Extract the credential subject from the verified VC
   const credentialSubject = verifiedVC.payload.vc.credentialSubject;
 
-  console.log('credentialSubject: ', credentialSubject);
+  // console.log('credentialSubject: ', credentialSubject);
 
   // Create a user object including the external token
   const user = { ...credentialSubject, token: etx };
@@ -150,7 +147,7 @@ export const createDID = async (props: Partial<IDIDCredentials>) => {
   const response = await axios.post(path, { ...props });
   const encryptedPayload = response.data.payload;
 
-  console.log('encryptedPayload" ', encryptedPayload);
+  // console.log('encryptedPayload" ', encryptedPayload);
   return encryptedPayload;
 };
 
@@ -163,22 +160,15 @@ export const createNValidate = async (props: Partial<IDIDCredentials>) => {
   const { address, password } = props;
   const encryptedPayload = await createDID({ ...props });
 
-  console.log('encryptedPayload" ', encryptedPayload);
-
-  // Create a file with the encrypted payload
-  const file = new File([encryptedPayload], `${generatedValues()}.did`, {
-    type: 'application/octet-stream',
-  });
-  const formData = new FormData();
-  formData.set('file', file);
-  formData.set('password', password!);
-  formData.set('address', address!);
-
-  console.log('formData: ', formData);
+  const data = {
+    password,
+    address,
+    e_token: encryptedPayload,
+  };
 
   // Validate the file and signer
-  const validatedResponse = await validateFileAndSigner(formData);
-  console.log('validatedResponse: ', validatedResponse);
+  const validatedResponse = await validateFileAndSigner(data);
+  // console.log('validatedResponse: ', validatedResponse);
 
   const { jwtVc, jwtVp, etx } = validatedResponse.payload;
   return { jwtVc, jwtVp, etx };
@@ -273,14 +263,16 @@ export const oauthHandle = async (
 
   const getAddress = await cookieGetter('account');
   const encryptedToken = await createDID({
-    address: getAddress?.value! as `0x${string}`,
-    id: `did:address:${getAddress?.value! as `0x${string}`}`,
+    address: getAddress?.value! as AddressType,
+    id: `did:address:${getAddress?.value! as AddressType}`,
     authType: userProviderObject.source,
     password: decryptedPassword,
     ...userProviderObject,
   });
 
   await cookieSetter('etx', encryptedToken);
+
+  // Removing these from the cookie to prevent users from modifying it to cause unexpected error
   await cookieRemover('ptx');
 
   return true;
@@ -322,42 +314,41 @@ export const modifyUserJWTToken = async (
   token: JWT,
   user: User | AdapterUser
 ) => {
-  const getAddress = await cookieGetter('account');
-  const getEncryptedToken = await cookieGetter('etx');
-
-  // Initial signin
   if (account) {
+    const address = await getCookieValue('account');
+    const getEncryptedToken = await getCookieValue('etx');
+    const wallet = await getCookieValue('wallet');
+    const walletName = await getCookieValue('wallet-name');
+    const balance = await getBalance(address as AddressType);
+
     const { type } = account;
-    if (type === 'oauth') {
-      if (getAddress && getEncryptedToken) {
-        const updatedToken = {
-          ...token,
-          id: `did:address:${getAddress.value!}`,
-          address: getAddress.value,
-          token: getEncryptedToken.value,
-        };
-        token = { ...updatedToken };
-        await cookieRemover('etx');
-        return token;
-      }
-      return token;
+
+    const userAccount = { wallet, walletName, address, balance };
+
+    if (type === 'oauth' && address && getEncryptedToken) {
+      token = {
+        ...token,
+        id: `did:address:${address}`,
+        token: getEncryptedToken,
+        ...userAccount,
+      };
+
+      await removeCookies(['etx', 'account', 'wallet', 'wallet-name']);
     }
 
-    if (type === 'credentials' && getAddress) {
-      console.log('user: ', user);
-      const updatedToken = {
+    if (type === 'credentials' && address) {
+      token = {
         ...user,
         picture: user?.image,
-        address: getAddress.value,
+        ...userAccount,
       };
-      await cookieRemover('etx');
-      return { ...updatedToken };
+
+      await removeCookies(['etx', 'account', 'wallet', 'wallet-name']);
     }
   }
 
   return token;
 };
-
 /**
  * Modifies the user session with JWT token details.
  * @param session - Session object from next-auth.
@@ -368,9 +359,23 @@ export const modifyUserSession = async (session: Session, token: JWT) => {
   const { user } = session;
 
   const { iat, exp, jti, ...props } = token;
+
   const updatedUserField = { ...props, image: props.picture };
 
   const updatedSession = { ...updatedUserField };
   session.user = { ...updatedSession };
   return session;
+};
+
+export const getCookieValue = async (
+  name: string
+): Promise<string | undefined> => {
+  const cookie = await cookieGetter(name);
+  return cookie?.value;
+};
+
+export const removeCookies = async (names: string[]) => {
+  for (const name of names) {
+    await cookieRemover(name);
+  }
 };

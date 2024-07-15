@@ -20,7 +20,7 @@ export const middleware = async (request: NextRequest) => {
   if (url.pathname.startsWith('/dashboard')) {
     if (!session) {
       // Redirect to the login page if the user is not authenticated
-      const loginUrl = new URL('/did/verify', request.url);
+      const loginUrl = new URL('/auth/did/verify', request.url);
       return NextResponse.redirect(loginUrl);
     }
   }

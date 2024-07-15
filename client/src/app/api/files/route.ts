@@ -21,15 +21,15 @@ export const POST = async (request: Request) => {
 
     if (!files) return jsonResponse(false, 'No file provided.', null, 404);
     try {
-      const f: string[] = [];
+      const CIDs: string[] = [];
       for (const file of files) {
-        const fileCidLink = await uploadFile(file);
-        const d = fileCidLink?.toString();
-        f.push(d!);
+        const cid = await uploadFile(file);
+        const stringifiedCid = cid?.toString();
+        CIDs.push(stringifiedCid!);
       }
 
-      console.log('f: ', f);
-      return jsonResponse(true, 'File created.', f, 200);
+      console.log('CIDs: ', CIDs);
+      return jsonResponse(true, 'File created.', CIDs, 200);
     } catch (error) {
       console.log('error: ', error);
       return jsonResponse(false, 'internal Error.', null, 500);

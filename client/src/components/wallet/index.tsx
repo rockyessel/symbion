@@ -3,14 +3,14 @@
 import Image from 'next/image';
 import { useState } from 'react';
 import { Check, Copy } from 'lucide-react';
-import { usePopUp } from '@/hooks/usePopup';
+// import { usePopUp } from '@/hooks/usePopup';
 import { decodeAddress } from '@gear-js/api';
 import { useAccount } from '@gear-js/react-hooks';
-import WalletLoader from '../common/loaders/wallet';
+// import WalletLoader from '../common/loaders/wallet';
 import { cookieSetter } from '@/lib/_actions/helpers';
 import { supportedWallets } from '@/lib/utils/constants';
 import { ScrollArea, ScrollBar } from '../ui/scroll-area';
-import { cn, summarizedAddress, truncate } from '@/lib/utils/helpers';
+import { cn, domainURL, summarizedAddress, truncate } from '@/lib/utils/helpers';
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { useWalletManagement } from '@/hooks/useWalletManagement';
 import { Account } from '@/types';
@@ -28,7 +28,7 @@ const Wallet = () => {
   } = useWalletManagement();
   const [isHovered, setIsHovered] = useState(false);
 
-  const openPopup = usePopUp;
+  // const openPopup = usePopUp;
   const { login, account } = useAccount();
 
   const handleMouseEnter = () => setIsHovered(true);
@@ -44,6 +44,7 @@ const Wallet = () => {
     if (!selectedAccount) return;
     await cookieSetter('account', decodeAddress(selectedAccount.address!));
     await cookieSetter('wallet', selectedAccount.meta.source!);
+    await cookieSetter('wallet-name', selectedAccount.meta.name!);
 
     // const signedMessage = await signMessage(selectedAccount);
 
@@ -188,7 +189,7 @@ const Wallet = () => {
 
         <div className='text-white w-[428px] p-6 flex-col inline-flex'>
           {isLoading ? (
-            <WalletLoader />
+            <div>Loading...</div>
           ) : isWalletExtensionAvailable ? (
             <div className='flex flex-col'>
               <p className='text-gray-200 text-xl font-semibold'>
@@ -222,7 +223,7 @@ const Wallet = () => {
                                 'object-cover object-center',
                                 wallet.props.className
                               )}
-                              src={wallet.props.logo}
+                              src={domainURL(wallet.props.logo)}
                             />
                           </button>
                         )

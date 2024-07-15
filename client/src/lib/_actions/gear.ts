@@ -1,6 +1,6 @@
 'use server';
 
-import { GearApi, ProgramMetadata } from '@gear-js/api';
+import { GearApi, ProgramMetadata, CreateType } from '@gear-js/api';
 import { domainURL } from '../utils/helpers';
 import {
   BLOG_PROGRAM_ID,
@@ -9,6 +9,8 @@ import {
 } from '../utils/constants';
 import { VARA_TESTNET } from '../configs/env';
 import { AddressType, IBlog } from '@/types';
+import type { HexString } from '@polkadot/util/types';
+import { formatBalance } from '@polkadot/util';
 
 export const gearApi = async () =>
   await GearApi.create({
@@ -27,6 +29,53 @@ export const readAllUsers = async () => {
     meta
   );
   return payload.toHuman();
+};
+
+export type ISystemAccount = {
+  nonce: number; // 94
+  consumers: number; // 0
+  providers: number; // 1
+  sufficients: number; // 0
+  data: {
+    free: number | HexString; // '0x...'
+    reserved: number | HexString; //  8327965542000
+    frozen: number | HexString; // 0
+    flags: number | HexString; // 0
+  };
+};
+
+export const getBalance = async (address: AddressType) => {
+  try {
+    const api = await gearApi();
+
+    const sysAccount = await api.query.system.account(address);
+    const account = sysAccount.toJSON() as unknown as ISystemAccount;
+    // TODO: handle error and display
+    if (!account) return;
+    const totalVARAToken = account.data.free;
+    const frozenVARAToken = CreateType.create(
+      'u128',
+      account.data.frozen
+    ).toString();
+    const rawBalance = `${+totalVARAToken - +frozenVARAToken}`;
+
+    const [unit] = api.registry.chainTokens;
+    const [decimals] = api.registry.chainDecimals;
+
+    const value = formatBalance(rawBalance.toString(), {
+      decimals,
+      forceUnit: unit,
+      withSiFull: false,
+      withSi: false,
+      withUnit: unit,
+    });
+
+    const balance =  `${value.slice(0, -2)}`
+
+    return balance;
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export const getAllPages = async () => {
@@ -87,6 +136,7 @@ export const getAllPageUsernames = async () => {
   const json = payload.toHuman() as unknown as any;
   return json;
 };
+
 export const getPageById = async (pageId: AddressType) => {
   const api = await gearApi();
 
