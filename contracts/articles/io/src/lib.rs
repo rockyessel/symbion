@@ -1,6 +1,6 @@
 #![no_std]
 
-use pages_io::{CommonAddressId, PageStatus, PageVisibility};
+use org_io::{CommonAddressId, PageStatus, PageVisibility};
 use users_io::UserId;
 use gmeta::{InOut, Metadata};
 use gstd::{debug, errors::Result, msg, prelude::*, Vec};

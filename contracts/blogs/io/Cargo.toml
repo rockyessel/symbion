@@ -1,5 +1,5 @@
 [package]
-name = "pages"
+name = "blogs-io"
 version.workspace = true
 edition.workspace = true
 publish.workspace = true
@@ -7,19 +7,13 @@ publish.workspace = true
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+# External
 gstd.workspace = true
 gmeta.workspace = true
-pages-io.workspace = true
-# scale-info.workspace = true
+parity-scale-codec.workspace=true
+scale-info-derive.workspace=true
 
 
-
-[dev-dependencies]
-pages-io.workspace = true
-scale-info-derive.workspace = true
-
-
-
-[build-dependencies]
-gear-wasm-builder.workspace = true
-pages-io.workspace = true
+# Internal
+org-io.workspace = true
+users-io.workspace = true
