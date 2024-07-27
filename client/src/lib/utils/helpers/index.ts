@@ -485,3 +485,25 @@ export const getInitialOption = (
 ): Option => {
   return options.find((option) => option.name === optionName) || options[0];
 };
+
+
+/**
+ * Copies the provided text to the clipboard.
+ * @param {string} text - The text to be copied.
+ * @returns {Promise<void>} A promise that resolves when the text is copied.
+ */
+export const copyToClipboard = async (text:string) => {
+  if (!navigator.clipboard) {
+    console.error('Clipboard API not available');
+    return false;
+  }
+
+  try {
+    await navigator.clipboard.writeText(text);
+    console.log('Text copied to clipboard');
+    return true
+  } catch (err) {
+    console.error('Failed to copy text: ', err);
+    return false;
+  }
+};

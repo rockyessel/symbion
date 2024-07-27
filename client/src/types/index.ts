@@ -152,7 +152,7 @@ export type AvailableTokensResponse = {
 };
 
 export interface IDIDCredentials {
-  id: `did:address:0x${string}`;
+  id: `did:address:${AddressType}`;
   name: string;
   email: string;
   address: AddressType;
@@ -163,12 +163,15 @@ export interface IDIDCredentials {
 }
 
 export interface IUserProps {
-  id: `did:address:0x${string}`;
+  id: `did:address:${AddressType}`;
   name: string;
   email: string;
   image: string;
   address: AddressType;
   token: string;
+  wallet: string;
+  walletName: string;
+  balance: string;
 }
 
 export type AddressType = `0x${string}`;
@@ -265,7 +268,7 @@ export interface IArticle {
   latestPublishedDate: string;
   otherPublications: string[];
   hideComments: boolean;
-  contributors: `0x${string}`[];
+  contributors: AddressType[];
   visibility: VisibilityType;
   content: string;
   isChatEnabled: boolean;

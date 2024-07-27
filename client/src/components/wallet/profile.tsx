@@ -7,12 +7,16 @@ import { Separator } from '../ui/separator';
 import { summarizedAddress, truncate } from '@/lib/utils/helpers';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 
+
 interface Props {
-  account: Account;
+  account?: Account;
   children: ReactNode;
 }
 
 const WalletProfile = ({ account, children }: Props) => {
+
+// const d = useBalance()
+
   return (
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
@@ -23,7 +27,7 @@ const WalletProfile = ({ account, children }: Props) => {
             <div className='w-full'>
               <p className='inline-flex items-center w-full justify-between text-gray-200 text-xs font-medium'>
                 <span className='inline-flex items-center gap-1.5'>
-                  <span>{summarizedAddress(account.address, 15, 4)}</span>
+                  <span>{summarizedAddress(account?.address, 15, 4)}</span>
                   <span>
                     <Copy className='w-4 h-4' strokeWidth={2.25} />
                   </span>
@@ -38,7 +42,7 @@ const WalletProfile = ({ account, children }: Props) => {
                 <span className='inline-flex items-center gap-1'>
                   <span>{truncate(account?.meta?.name!, 8)}</span>
                   <span className='text-lime-500'>・</span>
-                  <span>{account.meta.source}</span>
+                  <span>{account?.meta?.source}</span>
                 </span>
               </p>
             </div>

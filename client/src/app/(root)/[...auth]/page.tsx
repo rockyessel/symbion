@@ -13,10 +13,6 @@ interface Props {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { auth } = params;
 
-  console.log('params: ', params);
-
-  //   const type = auth === 'create' ? 'Create' : 'Verify';
-
   const createMsg = `Create a DID with the provided Oauth.`;
   const verifyMsg = `Verify your DID continue.`;
 
@@ -34,8 +30,6 @@ const DecentralizedIdentifierPage = ({ params }: Props) => {
   }
 
   const path = auth[auth.length - 1];
-
-  console.log('path: ', path);
 
   if (path !== 'create' && path !== 'verify') {
     return notFound();

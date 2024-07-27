@@ -17,7 +17,7 @@ import { jsonResponse } from './validate/route';
 export const POST = async (request: Request) => {
   try {
     const credentials = await request.json();
-    console.log('credentials: ', credentials);
+    // console.log('credentials: ', credentials);
     const locale = await cookieGetter('locale');
     const { password, authType } = credentials;
 
@@ -25,7 +25,7 @@ export const POST = async (request: Request) => {
     try {
       // Decrypt the password using the system secret
       decodePassword = decrypt(password, String(process.env.SYSTEM_SECRET));
-      console.log('decodePassword: ', decodePassword);
+      // console.log('decodePassword: ', decodePassword);
       if (!decodePassword) {
         return jsonResponse(
           false,

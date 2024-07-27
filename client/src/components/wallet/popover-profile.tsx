@@ -1,10 +1,15 @@
 'use client';
 
-import { Account } from '@/types';
+import { Account, IUserProps } from '@/types';
 import WalletProfile from './profile';
 import { Separator } from '../ui/separator';
 import { Copy, Expand, LogOut } from 'lucide-react';
-import { summarizedAddress, truncate } from '@/lib/utils/helpers';
+import {
+  summarizedAddress,
+  truncate,
+  copyToClipboard,
+  cn,
+} from '@/lib/utils/helpers';
 import {
   Popover,
   PopoverContent,
@@ -13,20 +18,36 @@ import {
 import { useAccount } from '@gear-js/react-hooks';
 import { supportedWallets } from '@/lib/utils/constants';
 import NextImage from '../native/image';
+import { useTransition,useState } from 'react';
 
 interface Props {
-  account: Account;
+  account?: Account;
+  session: IUserProps;
 }
 
-const WalletPopoverProfile = ({ account }: Props) => {
-  const { logout } = useAccount();
+const WalletPopoverProfile = ({ account, session }: Props) => {
+  const { logout, isAccountReady } = useAccount();
+  const [isPending, startTransition] = useTransition();
+  const [isCopied, setIsCopied] = useState(false);
+
+  const handleCopy = (copiedText: string) => {
+    if (!session) return;
+
+    if (!copiedText) return;
+
+    startTransition(async () => {
+      const isCopied_ = await copyToClipboard(copiedText);
+      setIsCopied(isCopied_);
+      return;
+    });
+  };
 
   const handleLogout = () => {
     logout();
   };
 
   const wallet = supportedWallets.find(
-    (wallet) => wallet.value === account.meta.source
+    (wallet) => wallet.value === session?.wallet
   );
 
   return (
@@ -49,16 +70,25 @@ const WalletPopoverProfile = ({ account }: Props) => {
             <div className='flex-col flex'>
               <span className='inline-flex items-center gap-1.5'>
                 <span className='text-zinc-300'>
-                  {summarizedAddress(account?.address, 19, 4)}
+                  {summarizedAddress(session.address, 19, 4)}
                 </span>
               </span>
             </div>
-            <div className='gap-[3.18px] inline-flex'>
+
+            <p className='gap-[3.18px] inline-flex justify-between'>
               <span className=''>
-                <span className='font-bold'>6.704 </span>
+                <span className='font-bold'>{session.balance}</span>
                 <span className=''>TVARA</span>
               </span>
-            </div>
+
+              <span className='text-[0.5rem]'>
+                {isAccountReady
+                  ? account
+                    ? 'connected'
+                    : 'Failed. Refresh page.'
+                  : 'connecting...'}
+              </span>
+            </p>
           </div>
         </div>
       </PopoverTrigger>
@@ -67,17 +97,23 @@ const WalletPopoverProfile = ({ account }: Props) => {
           <div className='p-2 flex flex-col'>
             <p className='inline-flex items-center w-full justify-between gap-3 text-zinc-200 text-xs font-medium'>
               <span className='inline-flex items-center gap-1.5'>
-                <span>{summarizedAddress(account?.address, 25, 4)}</span>
+                <span>{summarizedAddress(session.address, 25, 4)}</span>
               </span>
-              <span className='border border-zinc-500 p-1 rounded-lg'>
-                <Copy className='w-4 h-4' strokeWidth={2.25} />
+              <span
+                onClick={() => handleCopy(session.address)}
+                className='border border-zinc-500 p-1 rounded-lg'
+              >
+                <Copy
+                  className={cn('w-4 h-4', isCopied ? 'text-lime-600' : '')}
+                  strokeWidth={2.25}
+                />
               </span>
             </p>
 
             <p className='inline-flex items-center gap-1  text-xs'>
-              <span>{truncate(account?.meta?.name!, 10)}</span>
+              <span>{truncate(session.walletName, 10)}</span>
               <span className='text-lime-500'>・</span>
-              <span>{account?.meta.source}</span>
+              <span>{session.wallet}</span>
             </p>
           </div>
           <div>

@@ -104,6 +104,8 @@ const DIDCreate = () => {
 
     if (files.length > 0) {
       const response = await fileUpload(files);
+      
+      console.log('response" ',response)
       formInput.image = symbionURLBuilder(response.payload[0]);
       console.log('-----------added image');
 

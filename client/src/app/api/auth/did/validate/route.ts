@@ -34,7 +34,7 @@ export const POST = async (request: Request): Promise<Response> => {
     // Parse JSON body from the request
     const body = await request.json();
 
-    console.log('body: ', body);
+    // console.log('body: ', body);
 
     const { password, address, e_token } = body;
 
@@ -68,7 +68,7 @@ export const POST = async (request: Request): Promise<Response> => {
     try {
       // Decrypt the password using the system secret
       decodePassword = decrypt(password, String(process.env.SYSTEM_SECRET));
-      console.log('decodePassword: ', decodePassword);
+      // console.log('decodePassword: ', decodePassword);
       if (!decodePassword) {
         return jsonResponse(
           false,
@@ -90,7 +90,7 @@ export const POST = async (request: Request): Promise<Response> => {
     // Decrypt the token using the provided password
     let jwtVp;
     try {
-      console.log('decodePassword-jwtVp: ', decodePassword);
+      // console.log('decodePassword-jwtVp: ', decodePassword);
       jwtVp = decrypt(e_token, decodePassword);
     } catch (decryptError) {
       console.error('Error decrypting token:', decryptError);

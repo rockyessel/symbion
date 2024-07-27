@@ -53,13 +53,13 @@ export const authOptions: AuthOptions = {
         etx: { label: 'etx', type: 'text' },
       },
       async authorize(credentials) {
-        console.log('credentials: ', credentials);
+        // console.log('credentials: ', credentials);
         const jwtVc = credentials?.jwtVc;
         const jwtVp = credentials?.jwtVp;
         const etx = credentials?.etx;
         if (!jwtVp || !jwtVc || !etx) return null;
         const user = await verifyVcNVp(jwtVc, jwtVp, etx);
-        console.log({ credentials: user });
+        // console.log({ credentials: user });
         if (user !== null) return user;
         else return null;
       },

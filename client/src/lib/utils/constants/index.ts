@@ -1,12 +1,5 @@
-import {
-  EnkryptSVG,
-  NovaSVG,
-  PolkadotSVG,
-  SubwalletPNG,
-  TalismanPNG,
-} from '@/assets/static';
 import { proxy } from 'valtio';
-import { IArticle, IBlog, IPage, ISocial } from '@/types';
+import { IArticle, IBlog, IPage, ISocial,Option } from '@/types';
 import {
   CircleDollarSign,
   FileText,
@@ -18,6 +11,7 @@ import {
   Settings2,
 } from 'lucide-react';
 import { emptyParagraph } from '@/components/editor/lib/constants';
+
 
 export const providers = [
   { name: 'github', proxy: '1c4v90ving1t43du3924DMehKqsPt4tuXHx' },
@@ -31,7 +25,7 @@ export const supportedWallets = [
     props: {
       className: 'p-1',
       isSupported: true,
-      logo: TalismanPNG,
+      logo: '/wallets/talisman.png',
     },
   },
   {
@@ -40,7 +34,7 @@ export const supportedWallets = [
     props: {
       className: 'p-3',
       isSupported: true,
-      logo: EnkryptSVG,
+      logo: '/wallets/enkrypt.svg',
     },
   },
   {
@@ -49,7 +43,7 @@ export const supportedWallets = [
     props: {
       className: '',
       isSupported: true,
-      logo: SubwalletPNG,
+      logo: '/wallets/subwallet.png',
     },
   },
   {
@@ -58,7 +52,7 @@ export const supportedWallets = [
     props: {
       className: 'p-3',
       isSupported: true,
-      logo: PolkadotSVG,
+      logo: '/wallets/polkadot.svg',
     },
   },
   {
@@ -67,7 +61,16 @@ export const supportedWallets = [
     props: {
       className: 'p-2.5',
       isSupported: true,
-      logo: NovaSVG,
+      logo: '/wallets/nova.svg',
+    },
+  },
+  {
+    name: 'Fearless Wallet',
+    value: 'fearless-wallet',
+    props: {
+      className: 'p-2.5',
+      isSupported: false,
+      logo: '/wallets/fearless.svg',
     },
   },
 ];
@@ -207,6 +210,37 @@ export const BlogInit: IBlog = {
   sponsors: '',
   favicon: '',
 };
+
+export const blogOptions: Option[] = [
+  {
+    name: 'Public',
+    info: 'Public pages appear on the feeds, and outside the platform, and anyone can join.',
+  },
+  {
+    name: 'Private',
+    info: 'Private pages appear on feeds and outside the platform. But members can only be added by the owner or admins.',
+  },
+  {
+    name: 'Restricted',
+    info: 'Restricted pages are private and can only be found with links, which use addresses and not slugs.',
+  },
+];
+
+export const statusOptions: Option[] = [
+  {
+    name: 'Active',
+    info: 'Active pages are accessible and visible to the intended audience.',
+  },
+  {
+    name: 'Inactive',
+    info: 'Inactive pages are hidden and not accessible to the audience.',
+  },
+  {
+    name: 'Archived',
+    info: 'Archived pages are saved for future reference and are not active.',
+  },
+];
+
 
 export const USER_PROGRAM_ID: `0x${string}` = `0xb894ae37a69382d4ecbb10b0fd7a36a9660a9886241b9d1c57716210e09fd3a2`;
 export const ARTICLE_PROGRAM_ID: `0x${string}` = `0xa1272eecbaee52d04454d051fc3f573d78a41b430d5bfeab8adb000de525d9a3`;

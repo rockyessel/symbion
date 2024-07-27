@@ -10,7 +10,7 @@ import { useAccount } from '@gear-js/react-hooks';
 import { cookieSetter } from '@/lib/_actions/helpers';
 import { supportedWallets } from '@/lib/utils/constants';
 import { ScrollArea, ScrollBar } from '../ui/scroll-area';
-import { cn, summarizedAddress, truncate } from '@/lib/utils/helpers';
+import { cn, domainURL, summarizedAddress, truncate } from '@/lib/utils/helpers';
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { useWalletManagement } from '@/hooks/useWalletManagement';
 import { Account } from '@/types';
@@ -28,7 +28,7 @@ const Wallet = () => {
   } = useWalletManagement();
   const [isHovered, setIsHovered] = useState(false);
 
-  const openPopup = usePopUp;
+  // const openPopup = usePopUp;
   const { login, account } = useAccount();
 
   const handleMouseEnter = () => setIsHovered(true);
@@ -44,6 +44,7 @@ const Wallet = () => {
     if (!selectedAccount) return;
     await cookieSetter('account', decodeAddress(selectedAccount.address!));
     await cookieSetter('wallet', selectedAccount.meta.source!);
+    await cookieSetter('wallet-name', selectedAccount.meta.name!);
 
     // const signedMessage = await signMessage(selectedAccount);
 
@@ -222,7 +223,7 @@ const Wallet = () => {
                                 'object-cover object-center',
                                 wallet.props.className
                               )}
-                              src={wallet.props.logo}
+                              src={domainURL(wallet.props.logo)}
                             />
                           </button>
                         )
