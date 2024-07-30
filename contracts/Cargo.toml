@@ -24,9 +24,9 @@ articles={path = "articles"}
 articles-io={path = "articles/io"}
 
 # External Crates
-gstd = "1.4.2"
-gmeta = "1.4.2"
-gtest  = "1.4.2"
-gear-wasm-builder = "1.4.2"
+gstd = "1.4.1"
+gmeta = "1.4.1"
+gtest  = "1.4.1"
+gear-wasm-builder = "1.4.1"
 parity-scale-codec = { version = "3.6.12", default-features = false, features = ["derive"] }
 scale-info-derive= { version = "2.11.3", default-features = false }

@@ -23,7 +23,6 @@ impl Metadata for BlogsMetadata {
 #[scale_info(crate = gstd::scale_info)]
 pub struct Blog {
     pub id: CommonAddressId,
-    
     pub owner: UserId,
     pub created_by: UserId,
     pub title: String,
@@ -74,6 +73,8 @@ pub enum BlogActions {
 #[codec(crate = gstd::codec)]
 #[scale_info(crate = gstd::scale_info)]
 pub enum BlogEvents {
+    GetBlogById(Option<Blog>),
+    UserBlogs(Vec<Blog>),
     Created(CommonAddressId),
     Transferred(CommonAddressId),
 }
@@ -83,7 +84,7 @@ pub enum BlogEvents {
 #[scale_info(crate = gstd::scale_info)]
 pub enum BlogStateActions {
     GetAllBlogs,
-    GetAllBlogsByOwner(UserId),
+    GetAllBlogsByUserId(UserId),
     GetBlogById(CommonAddressId),
 }
 
@@ -92,7 +93,7 @@ pub enum BlogStateActions {
 #[scale_info(crate = gstd::scale_info)]
 pub enum BlogStateEvents {
     GetAllBlogs(Vec<Blog>),
-    GetAllBlogsByOwner(Vec<Blog>),
+    GetAllBlogsByUserId(Vec<Blog>),
     GetBlogById(Option<Blog>),
 }
 
@@ -216,14 +217,14 @@ pub fn get_all_blogs_by_owner(owner: UserId) -> BlogStateEvents {
             .cloned()
             .collect()
     };
-    BlogStateEvents::GetAllBlogsByOwner(blogs)
+    BlogStateEvents::GetAllBlogsByUserId(blogs)
 }
 
 pub fn handle_blog_state(state_action: BlogStateActions) -> BlogStateEvents {
     match state_action {
         BlogStateActions::GetAllBlogs => get_all_blogs(),
         BlogStateActions::GetBlogById(blog_id) => get_blog_by_id(blog_id),
-        BlogStateActions::GetAllBlogsByOwner(owner) => get_all_blogs_by_owner(owner),
+        BlogStateActions::GetAllBlogsByUserId(owner) => get_all_blogs_by_owner(owner),
     }
 }
 

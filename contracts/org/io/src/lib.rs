@@ -62,7 +62,7 @@ pub enum OrgStateEvent {
 #[derive(TypeInfo, Encode, Decode, Debug, Clone)]
 #[codec(crate = gstd::codec)]
 #[scale_info(crate = gstd::scale_info)]
-pub struct OrgCreateParams {
+pub struct CreateOrgParams {
     owner: UserAddressId,
     created_by: UserAddressId,
     name: String,
@@ -93,7 +93,7 @@ pub struct OrgCreateParams {
 #[derive(TypeInfo, Encode, Decode, Debug, Clone)]
 #[codec(crate = gstd::codec)]
 #[scale_info(crate = gstd::scale_info)]
-pub struct OrgJoinParams {
+pub struct JoinOrgParams {
     user_id: UserAddressId,
     org_id: CommonAddressId,
     entry_amount: Option<u64>,
@@ -102,7 +102,7 @@ pub struct OrgJoinParams {
 #[derive(TypeInfo, Encode, Decode, Debug, Clone)]
 #[codec(crate = gstd::codec)]
 #[scale_info(crate = gstd::scale_info)]
-pub struct OrgDeleteParams {
+pub struct DeleteOrgParams {
     org_id: CommonAddressId,
     owner_id: UserAddressId,
 }
@@ -110,34 +110,25 @@ pub struct OrgDeleteParams {
 #[derive(TypeInfo, Encode, Decode, Debug, Clone)]
 #[codec(crate = gstd::codec)]
 #[scale_info(crate = gstd::scale_info)]
-pub struct OrgAddArticleParams {
+pub struct AddArticleToOrgParams {
     org_id: CommonAddressId,
     owner_id: UserAddressId,
-    org_id: CommonAddressId,
+    
 }
 
 #[derive(TypeInfo, Encode, Decode, Debug, Clone)]
 #[codec(crate = gstd::codec)]
 #[scale_info(crate = gstd::scale_info)]
-pub struct OrgDeleteArticleParams {
+pub struct DeleteArticleFromOrgParams {
     org_id: CommonAddressId,
     owner_id: UserAddressId,
-    org_id: CommonAddressId,
+
 }
 
 #[derive(TypeInfo, Encode, Decode, Debug, Clone)]
 #[codec(crate = gstd::codec)]
 #[scale_info(crate = gstd::scale_info)]
-pub struct OrgAddPostParams {
-    org_id: CommonAddressId,
-    owner_id: UserAddressId,
-    post_id: OrgonAddressId,
-}
-
-#[derive(TypeInfo, Encode, Decode, Debug, Clone)]
-#[codec(crate = gstd::codec)]
-#[scale_info(crate = gstd::scale_info)]
-pub struct OrgDeletePostParams {
+pub struct AddPostToOrgParams {
     org_id: CommonAddressId,
     owner_id: UserAddressId,
     post_id: CommonAddressId,
@@ -146,7 +137,16 @@ pub struct OrgDeletePostParams {
 #[derive(TypeInfo, Encode, Decode, Debug, Clone)]
 #[codec(crate = gstd::codec)]
 #[scale_info(crate = gstd::scale_info)]
-pub struct AddOrgEventParams {
+pub struct DeletePostFromOrgParams {
+    org_id: CommonAddressId,
+    owner_id: UserAddressId,
+    post_id: CommonAddressId,
+}
+
+#[derive(TypeInfo, Encode, Decode, Debug, Clone)]
+#[codec(crate = gstd::codec)]
+#[scale_info(crate = gstd::scale_info)]
+pub struct AddEventToOrgParams {
     org_id: CommonAddressId,
     owner_id: UserAddressId,
     event_id: CommonAddressId,
@@ -155,7 +155,7 @@ pub struct AddOrgEventParams {
 #[derive(TypeInfo, Encode, Decode, Debug, Clone)]
 #[codec(crate = gstd::codec)]
 #[scale_info(crate = gstd::scale_info)]
-pub struct DeleteOrgEventParams {
+pub struct DeleteEventFromOrgParams {
     org_id: CommonAddressId,
     owner_id: UserAddressId,
     event_id: CommonAddressId,
@@ -164,7 +164,7 @@ pub struct DeleteOrgEventParams {
 #[derive(TypeInfo, Encode, Decode, Debug, Clone)]
 #[codec(crate = gstd::codec)]
 #[scale_info(crate = gstd::scale_info)]
-pub struct OrgAddUserParams {
+pub struct AddUserToOrgParams {
     org_id: CommonAddressId,
     owner_id: UserAddressId,
     user_id: UserAddressId,
@@ -173,9 +173,9 @@ pub struct OrgAddUserParams {
 #[derive(TypeInfo, Encode, Decode, Debug, Clone)]
 #[codec(crate = gstd::codec)]
 #[scale_info(crate = gstd::scale_info)]
-pub struct OrgDeleteUserParams {
+pub struct DeleteUserFromOrgParams {
     org_id: CommonAddressId,
-    owner_id: OrgAddressId,
+    owner_id: UserAddressId,
     user_id: UserAddressId,
 }
 
@@ -183,17 +183,17 @@ pub struct OrgDeleteUserParams {
 #[codec(crate = gstd::codec)]
 #[scale_info(crate = gstd::scale_info)]
 pub enum OrgAction {
-    Create(OrgCreateParams),
-    Join(OrgJoinParams),
-    Delete(OrgDeleteParams),
-    AddArticle(OrgAddArticleParams),
-    DeleteArticle(OrgDeleteArticleParams),
-    AddPost(OrgAddPostParams),
-    DeletePost(OrgDeletePostParams),
-    AddOrgEvent(AddOrgEventParams),
-    DeleteOrgEvent(DeleteOrgEventParams),
-    AddUser(OrgAddUserParams),
-    DeleteUser(OrgDeleteUserParams),
+    Create(CreateOrgParams),
+    Join(JoinOrgParams),
+    Delete(DeleteOrgParams),
+    AddArticle(AddArticleToOrgParams),
+    DeleteArticle(DeleteArticleFromOrgParams),
+    AddPost(AddPostToOrgParams),
+    DeletePost(DeletePostFromOrgParams),
+    AddOrgEvent(AddEventToOrgParams),
+    DeleteOrgEvent(DeleteEventFromOrgParams),
+    AddUser(AddUserToOrgParams),
+    DeleteUser(DeleteUserFromOrgParams),
 }
 
 #[derive(TypeInfo, Encode, Decode, Debug, Clone)]
@@ -278,11 +278,11 @@ pub struct Social {
     domain: String,
     icon: String,
     handler: String,
-    hide: bool,]
+    hide: bool,
     show_on_post: bool,
 }
 
-pub async fn create_page(params: OrgCreateParams) -> Result<OrgEvent, OrgEventError> {
+pub async fn create_org(params: CreateOrgParams) -> Result<OrgEvent, OrgEventError> {
     // Helper function to validate non-empty mandatory fields
     fn validate_mandatory_field(field: &str, field_name: &str) -> Result<(), OrgEventError> {
         if field.is_empty() {
@@ -384,7 +384,7 @@ fn find_org_by_id(org_id: &CommonAddressId) -> Option<&mut Org> {
     unsafe { ORG.iter_mut().find(|org| org.id == *org_id) }
 }
 
-pub async fn join_page(params: OrgJoinParams) -> Result<OrgEvent, OrgEventError> {
+pub async fn join_org(params: JoinOrgParams) -> Result<OrgEvent, OrgEventError> {
     if let Some(org) = find_org_by_id(&params.org_id) {
         if let Some(entry_amount) = &params.entry_amount {
             if org.is_premium && &org.entry_amount != &Some(*entry_amount) {
@@ -398,7 +398,7 @@ pub async fn join_page(params: OrgJoinParams) -> Result<OrgEvent, OrgEventError>
     }
 }
 
-pub async fn delete_page(params: OrgDeleteParams) -> Result<OrgEvent, OrgEventError> {
+pub async fn delete_org(params: DeleteOrgParams) -> Result<OrgEvent, OrgEventError> {
     // Check if the org exists and if the owner matches
     let org = unsafe { ORG.iter().find(|org| org.id == params.org_id) };
 
@@ -424,8 +424,8 @@ pub async fn delete_page(params: OrgDeleteParams) -> Result<OrgEvent, OrgEventEr
     }
 }
 
-pub async fn add_article_to_page(
-    params: OrgAddArticleParams,
+pub async fn add_article_to_org(
+    params: AddArticleToOrgParams,
 ) -> Result<OrgEvent, OrgEventError> {
     if let Some(org) = find_org_by_id(&params.org_id) {
         if org.owner == params.owner_id {
@@ -439,8 +439,8 @@ pub async fn add_article_to_page(
     }
 }
 
-pub async fn delete_article_from_page(
-    params: OrgDeleteArticleParams,
+pub async fn delete_article_from_org(
+    params: DeleteArticleFromOrgParams,
 ) -> Result<OrgEvent, OrgEventError> {
     if let Some(org) = find_org_by_id(&params.org_id) {
         if org.owner == params.owner_id {
@@ -455,7 +455,7 @@ pub async fn delete_article_from_page(
     }
 }
 
-pub async fn add_post_to_page(params: OrgAddPostParams) -> Result<OrgEvent, OrgEventError> {
+pub async fn add_post_to_org(params: AddPostToOrgParams) -> Result<OrgEvent, OrgEventError> {
     if let Some(org) = find_org_by_id(&params.org_id) {
         if org.owner == params.owner_id {
             org.posts.push(params.post_id.clone());
@@ -468,8 +468,8 @@ pub async fn add_post_to_page(params: OrgAddPostParams) -> Result<OrgEvent, OrgE
     }
 }
 
-pub async fn delete_post_from_page(
-    params: OrgDeletePostParams,
+pub async fn delete_post_from_org(
+    params: DeletePostFromOrgParams,
 ) -> Result<OrgEvent, OrgEventError> {
     if let Some(org) = find_org_by_id(&params.org_id) {
         if org.owner == params.owner_id {
@@ -483,8 +483,8 @@ pub async fn delete_post_from_page(
     }
 }
 
-pub async fn add_event_to_page(
-    params: AddOrgEventParams,
+pub async fn add_event_to_org(
+    params: AddEventToOrgParams,
 ) -> Result<OrgEvent, OrgEventError> {
     if let Some(org) = find_org_by_id(&params.org_id) {
         if org.owner == params.owner_id {
@@ -498,8 +498,8 @@ pub async fn add_event_to_page(
     }
 }
 
-pub async fn delete_event_from_page(
-    params: DeleteOrgEventParams,
+pub async fn delete_event_from_org(
+    params: DeleteEventFromOrgParams,
 ) -> Result<OrgEvent, OrgEventError> {
     if let Some(org) = find_org_by_id(&params.org_id) {
         if org.owner == params.owner_id {
@@ -513,7 +513,7 @@ pub async fn delete_event_from_page(
     }
 }
 
-pub async fn add_user_to_page(params: OrgAddUserParams) -> Result<OrgEvent, OrgEventError> {
+pub async fn add_user_to_org(params: AddUserToOrgParams) -> Result<OrgEvent, OrgEventError> {
     if let Some(org) = find_org_by_id(&params.org_id) {
         if org.owner == params.owner_id {
             org.members.push(params.user_id);
@@ -526,8 +526,8 @@ pub async fn add_user_to_page(params: OrgAddUserParams) -> Result<OrgEvent, OrgE
     }
 }
 
-pub async fn delete_user_from_page(
-    params: OrgDeleteUserParams,
+pub async fn delete_user_from_org(
+    params: DeleteUserFromOrgParams,
 ) -> Result<OrgEvent, OrgEventError> {
     if let Some(org) = find_org_by_id(&params.org_id) {
         if org.owner == params.owner_id {
@@ -543,12 +543,12 @@ pub async fn delete_user_from_page(
 
 // -------------------------------------------------------
 
-pub fn get_all_pages() -> OrgStateEvent {
+pub fn get_all_orgs() -> OrgStateEvent {
     let pages: Vec<Org> = unsafe { ORG.iter().cloned().collect() };
     OrgStateEvent::GetAllOrg(pages)
 }
 
-fn get_page_by_id(org_id: CommonAddressId) -> OrgStateEvent {
+fn get_org_by_id(org_id: CommonAddressId) -> OrgStateEvent {
     let org = unsafe { ORG.iter().find(|org| org.id == org_id).cloned() };
     match org {
         Some(org) => OrgStateEvent::GetOrgById(Some(org)),
@@ -556,34 +556,34 @@ fn get_page_by_id(org_id: CommonAddressId) -> OrgStateEvent {
     }
 }
 
-pub fn get_all_page_usernames() -> OrgStateEvent {
+pub fn get_all_org_usernames() -> OrgStateEvent {
     let usernames: Vec<String> =
         unsafe { ORG.iter().map(|org| org.username.clone()).collect() };
     OrgStateEvent::GetAllOrgUsernames(usernames)
 }
 
-pub fn handle_page_state(org_state_action: OrgStateAction) -> OrgStateEvent {
+pub fn handle_org_state(org_state_action: OrgStateAction) -> OrgStateEvent {
     match org_state_action {
-        OrgStateAction::GetAllOrg => get_all_pages(),
-        OrgStateAction::GetOrgById(org_id) => get_page_by_id(org_id),
-        OrgStateAction::GetAllOrgUsernames => get_all_page_usernames(),
+        OrgStateAction::GetAllOrg => get_all_orgs(),
+        OrgStateAction::GetOrgById(org_id) => get_org_by_id(org_id),
+        OrgStateAction::GetAllOrgUsernames => get_all_org_usernames(),
     }
 }
 
-pub async fn handle_page_action(org_action: OrgAction) -> Result<OrgEvent, OrgEventError> {
+pub async fn handle_org_action(org_action: OrgAction) -> Result<OrgEvent, OrgEventError> {
     debug!("org_action: {:?}", org_action);
 
     match org_action {
-        OrgAction::Create(params) => create_page(params).await,
-        OrgAction::Join(params) => join_page(params).await,
-        OrgAction::Delete(params) => delete_page(params).await,
-        OrgAction::AddArticle(params) => add_article_to_page(params).await,
-        OrgAction::DeleteArticle(params) => delete_article_from_page(params).await,
-        OrgAction::AddPost(params) => add_post_to_page(params).await,
-        OrgAction::DeletePost(params) => delete_post_from_page(params).await,
-        OrgAction::AddOrgEvent(params) => add_event_to_page(params).await,
-        OrgAction::DeleteOrgEvent(params) => delete_event_from_page(params).await,
-        OrgAction::AddUser(params) => add_user_to_page(params).await,
-        OrgAction::DeleteUser(params) => delete_user_from_page(params).await,
+        OrgAction::Create(params) => create_org(params).await,
+        OrgAction::Join(params) => join_org(params).await,
+        OrgAction::Delete(params) => delete_org(params).await,
+        OrgAction::AddArticle(params) => add_article_to_org(params).await,
+        OrgAction::DeleteArticle(params) => delete_article_from_org(params).await,
+        OrgAction::AddPost(params) => add_post_to_org(params).await,
+        OrgAction::DeletePost(params) => delete_post_from_org(params).await,
+        OrgAction::AddOrgEvent(params) => add_event_to_org(params).await,
+        OrgAction::DeleteOrgEvent(params) => delete_event_from_org(params).await,
+        OrgAction::AddUser(params) => add_user_to_org(params).await,
+        OrgAction::DeleteUser(params) => delete_user_from_org(params).await,
     }
 }

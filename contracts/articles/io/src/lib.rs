@@ -1,9 +1,9 @@
 #![no_std]
 
-use org_io::{CommonAddressId, PageStatus, PageVisibility};
-use users_io::UserId;
 use gmeta::{InOut, Metadata};
 use gstd::{debug, errors::Result, msg, prelude::*, Vec};
+use org_io::{CommonAddressId, Status, Visibility};
+use users_io::UserId;
 
 pub struct ArticlesMetadata;
 
@@ -36,7 +36,7 @@ pub struct Article {
     published_on: String,
     keywords: Vec<String>,
     is_transferred: bool,
-    status: PageStatus,
+    status: Status,
     created_at: String,
     updated_at: String,
     description: String,
@@ -47,7 +47,7 @@ pub struct Article {
     other_publications: Vec<String>,
     hide_comments: bool,
     contributors: Vec<UserId>,
-    visibility: PageVisibility,
+    visibility: Visibility,
     content: String,
     is_chat_enabled: bool,
 }
@@ -117,7 +117,7 @@ pub struct CreateArticleParams {
     published_on: String,
     keywords: Vec<String>,
     is_transferred: bool,
-    status: PageStatus,
+    status: Status,
     created_at: String,
     updated_at: String,
     description: String,
@@ -128,7 +128,7 @@ pub struct CreateArticleParams {
     other_publications: Vec<String>,
     hide_comments: bool,
     contributors: Vec<UserId>,
-    visibility: PageVisibility,
+    visibility: Visibility,
     content: String,
     is_chat_enabled: bool,
 }
@@ -148,6 +148,7 @@ pub async fn create_article(
     }
 
     // Helper function to validate non-empty optional fields
+
     fn validate_optional_field(
         field: &Option<String>,
         field_name: &str,

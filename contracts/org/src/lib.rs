@@ -15,7 +15,7 @@ async fn process_handle() -> Result<OrgEvent, OrgEventError> {
     let org_action_result: OrgAction = msg::load().expect("Failed to load OrgAction.");
 
     // Await the async function call and return its result
-    handle_page_action(org_action_result).await
+    handle_org_action(org_action_result).await
 }
 
 #[no_mangle]
